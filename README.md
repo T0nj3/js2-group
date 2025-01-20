@@ -13,4 +13,5 @@ For this project, we used three types of technologies.
 
 ## contact 
 If you have any question or want to get in toutch just reach out. 
-+ [My LinkedIn Profile](https://no.linkedin.com/in/andré-strøm-55b425134?trk=people-guest_people_search-card)
++ andlie02174@stud.noroff.no
++ tonalb00187@stud.noroff.no
