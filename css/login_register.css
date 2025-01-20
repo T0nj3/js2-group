@@ -1,0 +1,83 @@
+:root {
+    --primary-color: #ff7e5f;
+    --secondary-color: #feb47b;
+    --accent-color: #ffffff;
+    --background-gradient-start: #6a11cb;
+    --background-gradient-end: #ff7e5f;
+    --text-color: #fdfcfb;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+  }
+  body{
+    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .loginform h2 {
+    color: #ffffff;
+    text-align: center;
+  }
+  .loginform{
+    margin-top: 5%;
+    max-width: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 5%;
+    border-radius: 8px;
+    background-color: #ffffff39;
+  }
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .login-form input {
+    background-color: #ffffff26;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+  }
+  .login-form input::placeholder {
+    color: #ffffff; 
+    font-weight: 900;
+  }
+  .loginpage {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 100px;
+  }
+  .loginform button {
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 15px;
+    background-color: #FF7E5F; 
+    color: #ffffff;
+    outline: 3px solid #ffffff;
+    cursor: pointer;
+    border: none;
+    font-weight: 900;
+  }
+  .loginform button:hover {
+    background-color: #ffffff; 
+    color: #FF7E5F; 
+    outline: 3px solid #FF7E5F;
+  }
+  .loginform p {
+    color: #ffffff;
+    text-align: center;
+  }
+  .loginform a {
+    color: #feb47b;
+    text-decoration: none;
+    font-weight: 900;
+  }
+  .loginform a:hover {
+    color: #ff7e5f;
+  }
