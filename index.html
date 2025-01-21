@@ -3,11 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="this is a social media platform caled lynk where you can connect with friends and family">
-    <link rel="stylesheet" href="header_footer.css">
-    <title>Lynk index page</title>
+    <meta name="description" content="This is a social media platform called Lynk where you can connect with friends and family.">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <title>Lynk Index Page</title>
 </head>
-<body> 
-    <h1>Hello World</h1>
+<body>
+    <div class="landing-container">
+        <div class="intro-screen">
+            <h1 class="intro-logo">LYNK</h1>
+        </div>
+        
+       
+        <div class="content-section hidden">
+            <header class="content-header">
+                <h1 class="main-heading">LYNK</h1>
+                <p class="subheading">Sign up today.</p>
+            </header>
+            <main class="button-container">
+                <button class="btn btn-google">Sign up with Google</button>
+                <button class="btn btn-apple">Sign up with Apple</button>
+                <div class="divider">or</div>
+                <button class="btn btn-primary">Create Account <a href="../account/register.html"</button>
+            </main>
+            <footer class="content-footer">
+                <p class="login-text">Already have an account? <a href="../account/login.html">Log in</a></p>
+            </footer>
+        </div>
+        
+       
+        <footer class="hidden">
+            <ul class="footer-links">
+                <li><a href="#">About</a></li>
+                <li><a href="#">Help Center</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Brand Resources</a></li>
+                <li><a href="#">© 2025 Lynk</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const introScreen = document.querySelector('.intro-screen');
+            const contentSection = document.querySelector('.content-section');
+            const footer = document.querySelector('footer');
+    
+            introScreen.style.opacity = '0'; 
+            introScreen.style.transition = 'opacity 1s ease-in-out'; 
+            setTimeout(() => {
+                introScreen.style.display = 'none'; 
+                contentSection.classList.remove('hidden'); 
+                footer.classList.remove('hidden'); 
+            }, 1000); 
+        }, 3000); 
+    </script>
 </body>
 </html>
