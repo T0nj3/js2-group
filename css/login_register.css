@@ -81,3 +81,25 @@
   .loginform a:hover {
     color: #ff7e5f;
   }
+
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 3%;
+  }
+  .register-form input {
+    background-color: #ffffff26;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 15px;
+    border: none;
+    outline: none;
+  }
+  .register-form input::placeholder {
+    color: #ffffff; 
+    font-weight: 900;
+  }
+  .register-form button {
+    margin-top: 30px;
+  }
