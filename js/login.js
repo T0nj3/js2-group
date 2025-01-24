@@ -26,8 +26,7 @@ async function handelLogin(event) {
         localStorage.setItem("token", token);
         localStorage.setItem("userEmail", userEmail);
         console.log("Token and email saved in localStorage.");
-
-        window.location.reload();
+        window.location.href = "../feedpage.html";
     } catch (error) {
         console.error("Innlogging feilet:", error);
     }
