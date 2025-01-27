@@ -26,7 +26,7 @@ async function handelLogin(event) {
         localStorage.setItem("token", token);
         localStorage.setItem("userEmail", userEmail);
         console.log("Token and email saved in localStorage.");
-        window.location.href = "../feedpage.html";
+        window.location.href = "../post/feedpage.html";
     } catch (error) {
         console.error("Innlogging feilet:", error);
     }
@@ -51,5 +51,7 @@ function logout() {
     console.log("User logged out.");
     updateUI();
 }
+const form = document.querySelector("form");
+form.addEventListener("submit", handelLogin);
 
 checkIfLoggedIn();
