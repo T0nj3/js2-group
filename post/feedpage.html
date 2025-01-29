@@ -5,11 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="feed" content="this is a feed page for a social media app">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/feed.css">
+    <link rel="stylesheet" href="../css/header_footer.css">
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+
+    <header class="header">
+        <div class="logo">Lynk</div>
+        <div class="header-bottom">
+            <div class="icons">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <i class="fas fa-bell"></i>
+                <a href="userprofile.html" class="user-icon">
+                    <i class="fas fa-user"></i>
+                </a>
+                <span class="username">Username</span>
+            </div>
+        </div>
+    </header>
+
+    
     <div id="postContainer"></div>
 
     <script type="module" src="../js/feed.js"></script>
