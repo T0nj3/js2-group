@@ -1,56 +1,55 @@
+import { loginUserApi } from "./api.js";
+
 async function handelLogin(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-    try {
-        const response = await fetch("https://v2.api.noroff.dev/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+  try {
+    const data = await loginUserApi(email, password);
+    console.log("API response data:", data);
 
-        if (!response.ok) {
-            alert("Innlogging feilet. Sjekk om e-post og passord er riktig.");
-            throw new Error("Innlogging feilet");
-        }
+    const token = data.data.accessToken;
+    const userEmail = data.data.email;
 
-        const data = await response.json();
-        console.log("API response data:", data); 
-        const token = data.data.accessToken;
-        const userEmail = data.data.email;
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("userEmail", userEmail);
-        console.log("Token and email saved in localStorage.");
-        window.location.href = "../post/feedpage.html";
-    } catch (error) {
-        console.error("Innlogging feilet:", error);
-    }
+    localStorage.setItem("token", token);
+    localStorage.setItem("userEmail", userEmail);
+    console.log("Token and email saved in localStorage.");
+    window.location.href = "../post/feedpage.html";
+  } catch (error) {
+    alert("Innlogging feilet. Sjekk om e-post og passord er riktig.");
+  }
 }
 
 function checkIfLoggedIn() {
-    const token = localStorage.getItem("token");
-    const userEmail = localStorage.getItem("userEmail");
+  const token = localStorage.getItem("token");
+  const userEmail = localStorage.getItem("userEmail");
 
-    if (token && userEmail) {
-        console.log("User is logged in");
-        return true;
-    } else {
-        console.log("User is not logged in");
-        return false;
-    }
+  if (token && userEmail) {
+    console.log("User is logged in");
+    return true;
+  } else {
+    console.log("User is not logged in");
+    return false;
+  }
 }
 
 function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userEmail");
-    console.log("User logged out.");
-    updateUI();
+  const logoutButton = document.getElementById("logout");
+
+  if (logoutButton) {
+    logoutButton.addEventListener("click", () => {
+      localStorage.clear();
+      window.location.reload();
+    });
+  } else {
+    console.error("Logout button not found!");
+  }
 }
+
+logout();
+
 const form = document.querySelector("form");
 form.addEventListener("submit", handelLogin);
 
