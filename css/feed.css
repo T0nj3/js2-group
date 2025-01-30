@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #ff7e5f;
+    --secondary-color: #feb47b;
+    --accent-color: #ffffff;
+    --background-gradient-start: #6a11cb;
+    --background-gradient-end: #ff7e5f;
+    --text-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --blur-intensity: 20px;
+    --glow-color: rgba(255, 255, 255, 0.4);
+    --font-family: 'Poppins', sans-serif;
+}
+
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#postContainer {
+    width: 100%;
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 120px; 
+    padding-bottom: 70px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+
+.post {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.2);
+}
+
+.post h2 {
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.post p {
+    color: #ddd;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+.post-image {
+    width: 100%;
+    height: 250px; 
+    object-fit: cover;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Justerer responsivt */
+@media screen and (max-width: 768px) {
+    .feed-container {
+        padding: 200px 15px 40px; 
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    }
+
+    .post h2 {
+        font-size: 16px;
+    }
+
+    .post p {
+        font-size: 13px;
+    }
+
+    .post-image {
+        height: 200px; 
+    }
+}
