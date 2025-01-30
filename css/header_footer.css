@@ -22,18 +22,15 @@ body {
     font-family: var(--font-family);
     color: var(--text-color);
     background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
+/* Header */
 
 .header {
-    width: 95%;
+    width: 100%;
     max-width: 1200px;
     position: fixed;
-    top: 10px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -45,7 +42,7 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 15px var(--shadow-color);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    transition: all 0.3s ease-in-out;
+    z-index: 1000;
 }
 
 
@@ -151,6 +148,9 @@ body {
     opacity: 1;
 }
 
+.icons a.active i {
+    color: var(--shadow-color);
+}
 
 @media screen and (max-width: 768px) {
     .header {
@@ -195,3 +195,5 @@ body {
         max-width: 150px;
     }
 }
+
+/* Footer */
