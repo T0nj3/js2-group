@@ -1,4 +1,4 @@
-const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
+export const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
 
 export async function getAllPosts() {
   const accessToken = localStorage.getItem('token');
