@@ -27,6 +27,4 @@ const displayPosts = async () => {
         console.error('Error fetching posts:', error.message);
     }
 };
-
 displayPosts();
-
