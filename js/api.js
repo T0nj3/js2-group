@@ -80,3 +80,36 @@ export async function loginUserApi(email, password) {
     throw error;
   }
 }
+
+
+export async function getUserProfile(username) {
+  const API_BASE_URL = "https://v2.api.noroff.dev/social/profiles";
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    console.error("Ingen tilgang, Brukeren er ikke logget inn.");
+    return null;
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`,
+    "X-Noroff-API-Key": X_NOROFF_API_KEY
+  };
+
+  try {
+    console.log(`Henter profil for ${username}`);
+    const response = await fetch(`${API_BASE_URL}/${username}`, { headers });
+
+    if (!response.ok) {
+      console.error(`Feil ved henting av profil: ${response.status}`);
+      return null;
+    }
+
+    const data = await response.json();
+    return data.data; 
+  } catch (error) {
+    console.error("Feil ved henting av brukerprofil:", error);
+    return null;
+  }
+}
