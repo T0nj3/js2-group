@@ -42,3 +42,16 @@ async function registerUser(event) {
 
 const form = document.querySelector("form");
 form.addEventListener("submit", registerUser);
+
+function checkIfLoggedIn() {
+    const token = localStorage.getItem("token");
+    const userEmail = localStorage.getItem("userEmail");
+  
+    if (token && userEmail) {
+      console.log("User is logged in");
+      return true;
+    } else {
+      console.log("User is not logged in");
+      return false;
+    }
+  }
