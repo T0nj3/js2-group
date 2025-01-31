@@ -81,15 +81,42 @@ body {
     text-shadow: 0 0 10px var(--glow-color);
 }
 
-.username {
-    font-weight: bold;
-    color: var(--accent-color);
-    transition: 0.3s;
+.header .icons {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
 }
 
-.username:hover {
-    text-shadow: 0 0 10px var(--glow-color);
+
+.logout-button {
+    background-color: var(--primary-color);
+    color: var(--accent-color);
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-width: 80px;
 }
+
+
+.logout-button:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+
+.logout-button:focus {
+    outline: none;
+}
+
 
 
 .search-icon {
@@ -151,6 +178,8 @@ body {
 .icons a.active i {
     color: var(--shadow-color);
 }
+
+
 
 @media screen and (max-width: 768px) {
     .header {

@@ -1,56 +1,60 @@
-import { loginUserApi } from "./api.js";
+export const X_NOROFF_API_KEY = "580b33a9-04f3-4da3-bb38-de9adcf9d9f8";
 
-async function handelLogin(event) {
-  event.preventDefault();
+document.getElementById("loginForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  try {
-    const data = await loginUserApi(email, password);
-    console.log("API response data:", data);
+    const userData = { email, password };
 
-    const token = data.data.accessToken;
-    const userEmail = data.data.email;
+    try {
+        const response = await fetch("https://v2.api.noroff.dev/auth/login", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "X-Noroff-API-Key": X_NOROFF_API_KEY
+            },
+            body: JSON.stringify(userData)
+        });
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("userEmail", userEmail);
-    console.log("Token and email saved in localStorage.");
-    window.location.href = "../post/feedpage.html";
-  } catch (error) {
-    alert("Innlogging feilet. Sjekk om e-post og passord er riktig.");
-  }
-}
+        const result = await response.json();
+        console.log("Full API Response:", result); 
 
-function checkIfLoggedIn() {
-  const token = localStorage.getItem("token");
-  const userEmail = localStorage.getItem("userEmail");
+        if (response.ok) {
+            if (!result.data) {
+                throw new Error("Data is undefined!");
+            }
 
-  if (token && userEmail) {
-    console.log("User is logged in");
-    return true;
-  } else {
-    console.log("User is not logged in");
-    return false;
-  }
-}
+            const token = result.data.accessToken;
+            const userEmail = result.data.email;
+            const userName = result.data.name;
 
-function logout() {
-  const logoutButton = document.getElementById("logout");
+            console.log("Token:", token);
+            console.log("Email:", userEmail);
+            console.log("Name:", userName);
 
-  if (logoutButton) {
-    logoutButton.addEventListener("click", () => {
-      localStorage.clear();
-      window.location.reload();
-    });
-  } else {
-    console.error("Logout button not found!");
-  }
-}
+            if (!token || !userEmail || !userName) {
+                throw new Error("Token, email or navn is undefined!");
+            }
 
-logout();
+            localStorage.setItem("token", token);
+            localStorage.setItem("email", userEmail);
+            localStorage.setItem("name", userName);
 
-const form = document.querySelector("form");
-form.addEventListener("submit", handelLogin);
+            document.getElementById("message").textContent = "Login successful! Redirecting to feed page...";
 
-checkIfLoggedIn();
+            setTimeout(() => {
+                window.location.href = "../post/feedpage.html"; 
+            }, 2000);
+        } else {
+            console.error("Feilrespons fra API:", result);
+            document.getElementById("message").textContent = "Error: " + (result.errors ? result.errors[0].message : "Unknown error");
+        }
+    } catch (error) {
+        console.error("Innloggingsfeil:", error);
+        document.getElementById("message").textContent = "something went wrong. Please try again.";
+    }
+});
+
+
