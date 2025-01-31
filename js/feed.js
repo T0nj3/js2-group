@@ -30,7 +30,10 @@ const displayPosts = async () => {
                     : ""
                 }
             `;
-
+            postElement.addEventListener("click", () => {
+                window.location.href = `../post/individualpost.html?id=${post.id}`;
+              });
+            
             postContainer.appendChild(postElement);
         });
     } catch (error) {
