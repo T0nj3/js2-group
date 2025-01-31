@@ -1,57 +1,32 @@
-import { registerUserApi } from "./api.js";
-
-async function registerUser(event) {
+document.getElementById("registerForm").addEventListener("submit", async function (event) {
   event.preventDefault();
 
+  const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
-  const email1 = document.getElementById("email1").value;
   const password = document.getElementById("password").value;
-  const password1 = document.getElementById("password1").value;
 
-  const emailRules = /^[\w\-.]+@stud\.noroff\.no$/;
-  if (!emailRules.test(email)) {
-    alert("You need to enter a Noroff email address");
-    return;
-  }
-
-  if (!email || !password || !email1 || !password1) {
-    alert("Please fill in all fields.");
-    return;
-  }
-  if (email !== email1) {
-    alert("Email addresses do not match.");
-    return;
-  }
-  if (password !== password1) {
-    alert("Passwords do not match.");
-    return;
-  }
-  if (password.length < 8) {
-    alert("Password must be at least 8 characters long.");
-    return;
-  }
+  const userData = { name, email, password };
 
   try {
-    await registerUserApi(email, password);
-    alert("Registration successful! You can now log in.");
-    location.reload();
+      const response = await fetch("https://v2.api.noroff.dev/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData)
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+          document.getElementById("message").textContent = "Registration successful! Redirecting to login...";
+          
+          setTimeout(() => {
+              window.location.href = "login.html"; 
+          }, 2000); 
+      } else {
+          document.getElementById("message").textContent = "Error: " + result.errors[0].message;
+      }
   } catch (error) {
-    alert("An error occurred during registration. Please try again.");
+      document.getElementById("message").textContent = "Something went wrong. Please try again.";
   }
-}
+});
 
-const form = document.querySelector("form");
-form.addEventListener("submit", registerUser);
-
-function checkIfLoggedIn() {
-    const token = localStorage.getItem("token");
-    const userEmail = localStorage.getItem("userEmail");
-  
-    if (token && userEmail) {
-      console.log("User is logged in");
-      return true;
-    } else {
-      console.log("User is not logged in");
-      return false;
-    }
-  }

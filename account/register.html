@@ -8,25 +8,23 @@
     <title>Document</title>
 </head>
 <body>
-    <div class="loginform">
-        <h2>SIGNUP</h2>
-        <form action="/register-form" method="POST" class="register-form" id="register-form">
+    <div class="auth-container">
+        <h2>Register</h2>
+        <form id="registerForm" class="auth-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter your name" required>
 
-          <label for="email"></label>
-          <input type="text" id="email" name="email" placeholder="email" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
 
-          <label for="confirmEmail"></label>
-          <input type="text" id="email1" name="email1" placeholder="confirm email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Choose a password" required>
 
-          <label for="password"></label>
-          <input type="password" id="password" name="password" placeholder="password" required>
-
-          <label for="confirmPassword"></label>
-          <input type="password" id="password1" name="password1" placeholder="confirm password" required>
-
-          <button type="submit">Sign up</button>
+            <button type="submit">Register</button>
         </form>
     </div>
+
+    <p id="message"></p>
     <script type="module" src="../js/register.js"></script>
 </body>
 </html>

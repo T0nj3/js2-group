@@ -1,64 +1,58 @@
-import { getUserProfile } from './api.js';
+import { getUserProfile } from "./api.js";
 
-export async function displayUserProfile(username) {
+export async function displayUserProfile() {
+    const username = localStorage.getItem("name"); 
+
+    if (!username) {
+        console.error("Ingen bruker funnet i localStorage.");
+        return;
+    }
+
     const profile = await getUserProfile(username);
-
     const profileContainer = document.getElementById("profileContainer");
 
     if (profile && profileContainer) {
-       
+        profileContainer.innerHTML = ""; 
+
         const profileDiv = document.createElement("div");
         profileDiv.classList.add("profile-details");
 
-      
         const profileHeader = document.createElement("div");
         profileHeader.classList.add("profile-header");
 
         const avatarImg = document.createElement("img");
-        avatarImg.src = "https://images.unsplash.com/photo-1635107510862-53886e926b74?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; 
-        avatarImg.alt = "Min avatar";
+        avatarImg.src = profile.avatar?.url || "https://via.placeholder.com/150"; 
+        avatarImg.alt = profile.avatar?.alt || "Profilbilde";
         avatarImg.classList.add("profile-avatar");
 
         const profileInfo = document.createElement("div");
         profileInfo.classList.add("profile-info");
 
         const nameElement = document.createElement("h2");
-        nameElement.textContent = profile.name || "Lynk2025"; 
+        nameElement.textContent = profile.name || "Ukjent bruker";
         profileInfo.appendChild(nameElement);
 
         const bioElement = document.createElement("p");
-        bioElement.textContent = "Just loving these social medias"; 
+        bioElement.textContent = profile.bio || "Ingen bio lagt til enda.";
         profileInfo.appendChild(bioElement);
 
         profileHeader.appendChild(avatarImg);
         profileHeader.appendChild(profileInfo);
 
-      
         const statsContainer = document.createElement("div");
         statsContainer.classList.add("profile-stats");
 
         const postsInfo = document.createElement("div");
         postsInfo.classList.add("info-item");
-        postsInfo.innerHTML = `<span>10</span> Posts`; 
+        postsInfo.innerHTML = `<span>${profile.posts?.length || 0}</span> Posts`; 
         statsContainer.appendChild(postsInfo);
-
-        const followersInfo = document.createElement("div");
-        followersInfo.classList.add("info-item");
-        followersInfo.innerHTML = `<span>500</span> Followers`; 
-        statsContainer.appendChild(followersInfo);
-
-        const followingInfo = document.createElement("div");
-        followingInfo.classList.add("info-item");
-        followingInfo.innerHTML = `<span>150</span> Following`; 
-        statsContainer.appendChild(followingInfo);
 
         profileDiv.appendChild(profileHeader);
         profileDiv.appendChild(statsContainer);
 
-       
         const bannerImg = document.createElement("img");
-        bannerImg.src = "https://images.unsplash.com/photo-1519414442781-fbd745c5b497?q=80&w=2964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"; 
-        bannerImg.alt = "Min banner";
+        bannerImg.src = profile.banner?.url || "https://via.placeholder.com/600x200";
+        bannerImg.alt = profile.banner?.alt || "Bannerbilde";
         bannerImg.classList.add("profile-banner");
 
         profileContainer.appendChild(bannerImg);
@@ -68,6 +62,4 @@ export async function displayUserProfile(username) {
     }
 }
 
-
-const token = localStorage.getItem("token");
-displayUserProfile("lynk2025");
+document.addEventListener("DOMContentLoaded", displayUserProfile);
