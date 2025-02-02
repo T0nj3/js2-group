@@ -97,8 +97,33 @@ export async function fetchPostById(postId, accessToken) {
 
 export async function sendComment(postId, commentText, accessToken) {
   try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/comments`, {
+      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/comment`, {
           method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`,
+              "X-Noroff-API-Key": '580b33a9-04f3-4da3-bb38-de9adcf9d9f8'
+          },
+          body: JSON.stringify({ body: commentText })
+      });
+
+      if (!response.ok) {
+          const errorResponse = await response.json();
+          console.error("API-feil:", errorResponse);
+          throw new Error("Kunne ikke sende kommentar");
+      }
+
+      return await response.json();
+  } catch (error) {
+      console.error("Feil ved API-kall:", error.message);
+      throw error; 
+  }
+}
+
+export async function getComment( commentText,) {
+  try {
+      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${poatId}_comments=true`, {
+          method: "GET",
           headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${accessToken}`,
