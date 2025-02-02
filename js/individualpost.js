@@ -51,3 +51,42 @@ async function seeOnePost() {
 }
 
 seeOnePost();
+
+import { sendComment } from './api.js'; 
+
+document.getElementById("commentBtn").addEventListener("click", async () => {
+    const commentInput = document.getElementById("commentInput");
+    const commentText = commentInput.value.trim(); 
+    if (commentText === "") {
+        console.log("Kommentar kan ikke være tom!");
+        return; 
+    }
+
+   
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const postId = urlParams.get("id");
+
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) {
+        console.error("Ingen tilgangstoken funnet!");
+        return;
+    }
+
+    
+    try {
+        const response = await sendComment(postId, commentText, accessToken);
+        console.log("Kommentar sendt:", response);
+
+        
+        const commentContainer = document.getElementById("commentContainer");
+        const newComment = document.createElement("p");
+        newComment.textContent = commentText;
+        commentContainer.appendChild(newComment);
+
+        
+        commentInput.value = "";
+    } catch (error) {
+        console.error("Feil ved innsending av kommentar:", error);
+    }
+});
