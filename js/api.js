@@ -70,3 +70,27 @@ export async function getUserProfile(username) {
       return null;
   }
 }
+
+export async function fetchPostById(postId, accessToken) {
+  try {
+      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`,
+              "X-Noroff-API-Key": X_NOROFF_API_KEY,
+          }
+      });
+
+      if (!response.ok) {
+          const errorResponse = await response.json();
+          console.error("API error response:", errorResponse);
+          throw new Error("Failed to fetch post");
+      }
+
+      return await response.json();
+  } catch (error) {
+      console.error("Error:", error.message);
+      throw error;
+  }
+}
