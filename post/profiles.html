@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profiles</title>
+    <link rel="stylesheet" href="../css/profiles.css">
+    <script type="module" src="../js/profiles.js"></script>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">Lynk</div>
+        <div class="header-bottom">
+            <div class="icons">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchProfile" placeholder="Search for a user...">
+                    <button id="searchBtn">Search</button>
+                </div>
+                <i class="fas fa-bell"></i>
+                <a href="/post/userprofile.html" class="user-icon">
+                    <i class="fas fa-user"></i>
+                </a>
+                <button id="logoutBtn" class="logout-button">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="profileContainer" class="profile-container"></div>
+    </main>
+
+    <script src="../js/logout.js"></script>
+</body>
+</html>
