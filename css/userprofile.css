@@ -45,7 +45,8 @@ body {
 
 .profile-banner {
     max-width: 100%;
-    height: 250px;
+    width: 100%;
+    height: 25vw;
     object-fit: cover;
 }
 
@@ -136,6 +137,100 @@ body {
     background-color: #e75d4e;
 }
 
+.posts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    width: 70vw;
+    margin-top: 20px;
+}
+
+.post {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.post:hover {
+    transform: scale(1.05);
+}
+
+.post img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.post .post-actions {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: flex;
+    gap: 5px;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.add-post-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.add-post-btn:hover {
+    background-color: #e75d4e;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: white;
+}
 
 @media screen and (max-width: 768px) {
     .profile-container {
