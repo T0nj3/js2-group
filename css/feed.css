@@ -82,7 +82,6 @@ body {
     margin-top: 10px;
 }
 
-/* Justerer responsivt */
 @media screen and (max-width: 768px) {
     .feed-container {
         padding: 200px 15px 40px; 

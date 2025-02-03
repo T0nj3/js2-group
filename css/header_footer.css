@@ -21,10 +21,7 @@
 body {
     font-family: var(--font-family);
     color: var(--text-color);
-    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
 }
-
-/* Header */
 
 .header {
     width: 100%;
@@ -225,4 +222,6 @@ body {
     }
 }
 
-/* Footer */
+a {
+    text-decoration: none;
+}
