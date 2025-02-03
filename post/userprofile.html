@@ -31,8 +31,30 @@
     </header>
     
     <main>
-        <div id="profileContainer" class="profile-container">
+        <div id="profileContainer" class="profile-container"></div>
+    
+        
+        <button class="add-post-btn" id="openPostForm">
+            <i class="fas fa-plus"></i>
+        </button>
+    
+        
+        <div id="newPostModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span> 
+                <h3>Create a New Post</h3>
+                <input type="text" id="postTitle" placeholder="Post title">
+                <textarea id="postBody" placeholder="Write something..."></textarea>
+                <input type="text" id="postImage" placeholder="Image URL (optional)">
+                <button id="createPostBtn">Post</button>
+            </div>
+        </div>
+    
+       
+        <div id="postsContainer" class="posts-container"></div>
     </main>
+    
+    <script type="module" src="../js/userprofile.js"></script>
 
 </body>
 </html>
