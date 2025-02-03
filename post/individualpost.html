@@ -4,17 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="this page allows you to se a single post on the platform">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/individual_post.css">
+    <link rel="stylesheet" href="../css/header_footer.css">
     <title>see singel posts in lynk</title>
 </head>
 <body>
-    <h1> Se hver sin post</h1>
+    <header class="header">
+        <a href="../post/feedpage.html"><div class="logo">Lynk</div></a>
+        <div class="header-bottom">
+            <div class="icons">
+                <div class="search-icon">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchProfile" placeholder="Search for a user...">
+                    <button id="searchBtn">Search</button>
+                </div>
+                <i class="fas fa-bell"></i>
+                <a href="/post/userprofile.html" class="user-icon">
+                    <i class="fas fa-user"></i>
+                </a>
+                <button id="logoutBtn" class="logout-button">Logout</button>
+            </div>
+        </div>
+    </header>
+    <h1>Explore Post</h1>
     <div id="OnePost"></div>  
-    <div id="commentContainer"></div>
-    <div id="commentForm">
-        <input type="text" id="commentInput" placeholder="Skriv en kommentar">
-        <button id="commentBtn">Kommenter</button>
-    </div>
-    
+    <div id="commentSection">  
+        <div id="commentContainer"></div>
+        <div id="commentForm">
+            <input type="text" id="commentInput" placeholder="Skriv en kommentar">
+            <button id="commentBtn">Kommenter</button>
+        </div>
     <script type="module" src="../js/individualpost.js"></script>
 </body>
 </html>

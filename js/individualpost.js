@@ -73,18 +73,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("commentBtn").addEventListener("click", async () => {
         const commentText = commentInput.value.trim(); 
         if (commentText === "") {
-            console.log("Kommentar kan ikke være tom!");
+            console.error("Kommentaren er tom.");  
             return; 
         }
 
-        const accessToken = localStorage.getItem('token');
-        if (!accessToken) {
-            console.error("Ingen tilgangstoken funnet!");
-            return;
-        }
-
         try {
-            const response = await sendComment(postId, commentText, accessToken);
+            const response = await sendComment(postId, commentText, localStorage.getItem("token"));
             console.log("Kommentar sendt:", response);
 
             const newComment = document.createElement("p");
