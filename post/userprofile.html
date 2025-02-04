@@ -49,6 +49,18 @@
                 <button id="createPostBtn">Post</button>
             </div>
         </div>
+
+      
+<div id="editPostModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editPostModal')">&times;</span>
+        <h3>Edit Post</h3>
+        <input type="text" id="editPostTitle" placeholder="Post title">
+        <textarea id="editPostBody" placeholder="Write something..."></textarea>
+        <input type="text" id="editPostImage" placeholder="Image URL (optional)">
+        <button id="saveEditPostBtn">Save Changes</button>
+    </div>
+</div>
     
        
         <div id="postsContainer" class="posts-container"></div>

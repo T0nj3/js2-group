@@ -71,13 +71,14 @@ async function displayUserPosts(username) {
     }
 
     postsContainer.innerHTML = posts.map(post => `
-        <div class="post">
+        <div class="post" id="post-${post.id}">
             <div class="post-actions">
-                <button onclick="editPost('${post.id}')"><i class="fas fa-edit"></i></button>
+                <button onclick="openEditModal('${post.id}')"><i class="fas fa-edit"></i></button>
                 <button onclick="deleteUserPost('${post.id}')"><i class="fas fa-trash"></i></button>
             </div>
-            <h3>${post.title}</h3>
-            ${post.media?.url ? `<img src="${post.media.url}" alt="Post image">` : ""}
+            <h3 class="post-title">${post.title}</h3>
+            <p class="post-body">${post.body}</p>
+            ${post.media?.url ? `<img class="post-image" src="${post.media.url}" alt="Post image">` : ""}
             <p class="post-author">By: ${post.author?.name || "Unknown"}</p>
         </div>
     `).join('');
@@ -158,6 +159,9 @@ async function getUserPosts(username) {
 }
 
 async function deleteUserPost(postId) {
+    const confirmation = confirm("Are you sure you want to delete this post?");
+    if (!confirmation) return; 
+
     const token = localStorage.getItem("token");
     if (!token) return null;
 
@@ -169,30 +173,85 @@ async function deleteUserPost(postId) {
         }
     });
 
-    if (!response.ok) return null;
-    return await response.json();
+    if (!response.ok) {
+        alert("Failed to delete post. Please try again.");
+        return null;
+    }
+ 
+    window.location.reload(); 
 }
 
-async function editPost(postId) {
-    const newTitle = prompt("Enter new title:");
-    const newBody = prompt("Enter new content:");
-    if (!newTitle || !newBody) return;
+function openEditModal(postId) {
+    const postElement = document.getElementById(`post-${postId}`);
+    if (!postElement) {
+        console.error(`Could not find post with ID: post-${postId}`);
+        return;
+    }
+
+    
+    document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
+    document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
+    document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
+
+    document.getElementById("editPostModal").dataset.postId = postId;
+    document.getElementById("editPostModal").style.display = "flex";
+}
+
+async function saveEditedPost() {
+    const postId = document.getElementById("editPostModal").dataset.postId;
+    if (!postId) {
+        console.error("Post ID not found!");
+        return;
+    }
+
+    const newTitle = document.getElementById("editPostTitle").value.trim();
+    const newBody = document.getElementById("editPostBody").value.trim();
+    const newImageUrl = document.getElementById("editPostImage").value.trim();
+
+    if (!newTitle || !newBody) {
+        console.error("Title and body cannot be empty!");
+        return;
+    }
 
     const token = localStorage.getItem("token");
-    if (!token) return null;
+    if (!token) {
+        console.error("User not authenticated!");
+        return;
+    }
 
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
-        },
-        body: JSON.stringify({ title: newTitle, body: newBody })
-    });
+    const updatedPost = {
+        title: newTitle,
+        body: newBody,
+        media: newImageUrl ? { url: newImageUrl } : null
+    };
 
-    if (!response.ok) return null;
-    return await response.json();
+    try {
+        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+                "X-Noroff-API-Key": X_NOROFF_API_KEY
+            },
+            body: JSON.stringify(updatedPost)
+        });
+
+        if (!response.ok) {
+            console.error("Failed to update post");
+            return;
+        }
+
+        console.log("Post updated successfully!");
+
+        
+        await displayUserPosts(localStorage.getItem("name"));
+
+        
+        closeModal("editPostModal");
+
+    } catch (error) {
+        console.error("Error updating post:", error);
+    }
 }
 
 function openPost(postId) {
@@ -202,23 +261,56 @@ function openPost(postId) {
 function setupModal() {
     const openPostFormBtn = document.getElementById("openPostForm");
     const newPostModal = document.getElementById("newPostModal");
-    const closeModalBtn = document.querySelector("#newPostModal .close"); 
+    const closeNewPostModalBtn = newPostModal?.querySelector(".close");
 
-    openPostFormBtn.addEventListener("click", () => {
-        newPostModal.style.display = "flex";
-    });
+    const editPostModal = document.getElementById("editPostModal");
+    const closeEditPostModalBtn = editPostModal?.querySelector(".close");
 
-    closeModalBtn.addEventListener("click", () => {
-        newPostModal.style.display = "none";
-    });
+    const saveEditPostBtn = document.getElementById("saveEditPostBtn");
 
-    window.addEventListener("click", function(event) {
-        if (event.target === newPostModal) {
+    
+    if (openPostFormBtn && newPostModal && closeNewPostModalBtn) {
+        openPostFormBtn.addEventListener("click", () => {
+            newPostModal.style.display = "flex";
+        });
+
+        closeNewPostModalBtn.addEventListener("click", () => {
             newPostModal.style.display = "none";
-        }
-    });
+        });
+
+        window.addEventListener("click", function (event) {
+            if (event.target === newPostModal) {
+                newPostModal.style.display = "none";
+            }
+        });
+    }
+
+    
+    if (editPostModal && closeEditPostModalBtn) {
+        closeEditPostModalBtn.addEventListener("click", () => {
+            editPostModal.style.display = "none";
+        });
+
+        window.addEventListener("click", function (event) {
+            if (event.target === editPostModal) {
+                editPostModal.style.display = "none";
+            }
+        });
+    }
+
+   
+    if (saveEditPostBtn) {
+        saveEditPostBtn.addEventListener("click", saveEditedPost);
+    }
 }
 
-window.editPost = editPost;
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+}
+
+window.closeModal = closeModal;
+window.saveEditedPost = saveEditedPost;
+
+window.openEditModal = openEditModal;
 window.deleteUserPost = deleteUserPost;
 window.openPost = openPost;
