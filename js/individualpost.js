@@ -1,4 +1,4 @@
-import { fetchPostById } from './api.js';
+import { fetchPostById, sendComment } from './api.js';
 
 async function seeOnePost() {
     const queryString = window.location.search;
@@ -45,30 +45,60 @@ async function seeOnePost() {
             postContainer.appendChild(imgElement);
         }
 
+        await loadComments(postId);
+
     } catch (error) {
         console.error("Error:", error.message);
     }
 }
 
-seeOnePost();
 
-import { sendComment } from './api.js'; 
+async function loadComments(postId ) {
+    const accessToken = localStorage.getItem('token'); // 🔹 Hent token
+
+    if (!accessToken) {
+        console.error("Ingen tilgangstoken funnet.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}?_comments=true`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8",
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Kunne ikke hente kommentarer");
+        }
+
+        console.log("Hentet kommentarer:", data.data.comments);
+
+        const commentContainer = document.getElementById("commentContainer");
+        commentContainer.innerHTML = ""; 
+
+        data.data.comments.forEach(comment => {
+            const commentElement = document.createElement("p");
+            commentElement.textContent = comment.body;
+            commentContainer.appendChild(commentElement);
+        });
+
+    } catch (error) {
+        console.error("Feil ved henting av kommentarer:", error);
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-    const commentContainer = document.getElementById("commentContainer");
     const commentInput = document.getElementById("commentInput");
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const postId = urlParams.get("id");
-
-    const savedComments = JSON.parse(localStorage.getItem(`comments_${postId}`)) || [];
-    
-    savedComments.forEach(comment => {
-        const newComment = document.createElement("p");
-        newComment.textContent = comment;
-        commentContainer.appendChild(newComment);
-    });
 
     document.getElementById("commentBtn").addEventListener("click", async () => {
         const commentText = commentInput.value.trim(); 
@@ -78,19 +108,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const response = await sendComment(postId, commentText, localStorage.getItem("token"));
-            console.log("Kommentar sendt:", response);
-
-            const newComment = document.createElement("p");
-            newComment.textContent = commentText;
-            commentContainer.appendChild(newComment);
-
-            savedComments.push(commentText);
-            localStorage.setItem(`comments_${postId}`, JSON.stringify(savedComments));
+            await sendComment(postId, commentText, localStorage.getItem("token"));
+            console.log("Kommentar sendt!");
 
             commentInput.value = "";
+            await loadComments(postId); 
+
         } catch (error) {
             console.error("Feil ved innsending av kommentar:", error);
         }
     });
 });
+
+seeOnePost();
