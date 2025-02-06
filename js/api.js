@@ -144,3 +144,28 @@ export async function getComment( commentText,) {
       throw error; 
   }
 }
+
+export async function sendReactToPost(postId, symbol, accessToken) {
+  try {
+      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/react/`, {
+          method: "PUT",  
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${accessToken}`,
+              "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8"
+          },
+          body: JSON.stringify({ symbol: symbol }) 
+      });
+
+      const data = await response.json(); 
+
+      if (!response.ok) {
+          throw new Error(data.message || "Failed to send reaction");
+      }
+
+      return data; 
+  } catch (error) {
+      console.error("Error:", error.message);  
+      throw error; 
+  }
+}
