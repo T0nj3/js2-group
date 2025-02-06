@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             const avatar = document.getElementById("newAvatar").value.trim();
             const banner = document.getElementById("newBanner").value.trim();
             await updateUserProfile(username, bio, avatar, banner);
-            displayUserProfile(username);
+            await displayUserProfile(username);
         });
     }
 
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         if (title && body) {
             await createPost(title, body, imageUrl);
-            displayUserPosts(username);
+            await displayUserPosts(username);
             closeModal();
         }
     });
@@ -53,12 +53,59 @@ async function displayUserProfile(username) {
             <div class="profile-header">
                 <img src="${profile.avatar?.url || 'https://via.placeholder.com/150'}" class="profile-avatar">
                 <div class="profile-info">
-                    <h2>${profile.name}</h2>
+                    <h2>${profile.name} 
+                        <button id="editProfileBtn" class="edit-profile-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </h2>
                     <p>${profile.bio || 'No bio available'}</p>
                 </div>
             </div>
         </div>
+
+        <div id="updateProfileSection" class="update-profile" style="display: none;">
+            <h3>Update profile</h3>
+            <input type="text" id="newAvatar" placeholder="New Avatar URL">
+            <input type="text" id="newBanner" placeholder="New Banner URL">
+            <textarea id="newBio" placeholder="Update bio"></textarea>
+            <button id="updateProfileBtn">Update</button>
+        </div>
     `;
+
+    document.getElementById("editProfileBtn").addEventListener("click", function () {
+        const updateSection = document.getElementById("updateProfileSection");
+        updateSection.style.display = updateSection.style.display === "none" ? "block" : "none";
+    });
+
+    document.getElementById("updateProfileBtn").addEventListener("click", async function () {
+        const bio = document.getElementById("newBio").value.trim();
+        const avatar = document.getElementById("newAvatar").value.trim();
+        const banner = document.getElementById("newBanner").value.trim();
+        await updateUserProfile(username, bio, avatar, banner);
+        await displayUserProfile(username);
+    });
+}
+
+async function updateUserProfile(username, bio, avatar, banner) {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            "X-Noroff-API-Key": X_NOROFF_API_KEY
+        },
+        body: JSON.stringify({ bio, avatar: { url: avatar }, banner: { url: banner } })
+    });
+
+    if (!response.ok) {
+        console.error("Failed to update profile.");
+        return null;
+    }
+    
+    return await response.json();
 }
 
 async function displayUserPosts(username) {
@@ -100,22 +147,20 @@ async function getUserProfile(username) {
     return data.data;
 }
 
-async function updateUserProfile(username, bio, avatar, banner) {
+async function getUserPosts(username) {
     const token = localStorage.getItem("token");
-    if (!token) return null;
+    if (!token) return [];
 
-    const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
-        method: "PUT",
+    const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
         headers: {
-            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
             "X-Noroff-API-Key": X_NOROFF_API_KEY
-        },
-        body: JSON.stringify({ bio, avatar: { url: avatar }, banner: { url: banner } })
+        }
     });
 
-    if (!response.ok) return null;
-    return await response.json();
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.data || [];
 }
 
 async function createPost(title, body, imageUrl) {
@@ -142,22 +187,6 @@ async function createPost(title, body, imageUrl) {
     return await response.json();
 }
 
-async function getUserPosts(username) {
-    const token = localStorage.getItem("token");
-    if (!token) return [];
-
-    const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
-        }
-    });
-
-    if (!response.ok) return [];
-    const data = await response.json();
-    return data.data || [];
-}
-
 async function deleteUserPost(postId) {
     const confirmation = confirm("Are you sure you want to delete this post?");
     if (!confirmation) return; 
@@ -181,23 +210,9 @@ async function deleteUserPost(postId) {
     window.location.reload(); 
 }
 
-function openEditModal(postId) {
-    const postElement = document.getElementById(`post-${postId}`);
-    if (!postElement) {
-        console.error(`Could not find post with ID: post-${postId}`);
-        return;
-    }
-
-    
-    document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
-    document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
-    document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
-
-    document.getElementById("editPostModal").dataset.postId = postId;
-    document.getElementById("editPostModal").style.display = "flex";
-}
-
 async function saveEditedPost() {
+   
+
     const postId = document.getElementById("editPostModal").dataset.postId;
     if (!postId) {
         console.error("Post ID not found!");
@@ -219,11 +234,13 @@ async function saveEditedPost() {
         return;
     }
 
+   
     const updatedPost = {
         title: newTitle,
         body: newBody,
         media: newImageUrl ? { url: newImageUrl } : null
     };
+
 
     try {
         const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
@@ -236,17 +253,14 @@ async function saveEditedPost() {
             body: JSON.stringify(updatedPost)
         });
 
+        const responseData = await response.json();
+
         if (!response.ok) {
-            console.error("Failed to update post");
+            console.error("Failed to update post:", responseData);
             return;
         }
 
-        console.log("Post updated successfully!");
-
-        
         await displayUserPosts(localStorage.getItem("name"));
-
-        
         closeModal("editPostModal");
 
     } catch (error) {
@@ -254,8 +268,25 @@ async function saveEditedPost() {
     }
 }
 
-function openPost(postId) {
-    window.location.href = `/post/individualpost.html?id=${postId}`;
+function openEditModal(postId) {
+
+    const postElement = document.getElementById(`post-${postId}`);
+    if (!postElement) {
+        return;
+    }
+
+    document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
+    document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
+    document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
+
+    const modal = document.getElementById("editPostModal");
+    modal.dataset.postId = postId;
+   
+    modal.style.display = "flex";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
 }
 
 function setupModal() {
@@ -263,12 +294,6 @@ function setupModal() {
     const newPostModal = document.getElementById("newPostModal");
     const closeNewPostModalBtn = newPostModal?.querySelector(".close");
 
-    const editPostModal = document.getElementById("editPostModal");
-    const closeEditPostModalBtn = editPostModal?.querySelector(".close");
-
-    const saveEditPostBtn = document.getElementById("saveEditPostBtn");
-
-    
     if (openPostFormBtn && newPostModal && closeNewPostModalBtn) {
         openPostFormBtn.addEventListener("click", () => {
             newPostModal.style.display = "flex";
@@ -277,40 +302,11 @@ function setupModal() {
         closeNewPostModalBtn.addEventListener("click", () => {
             newPostModal.style.display = "none";
         });
-
-        window.addEventListener("click", function (event) {
-            if (event.target === newPostModal) {
-                newPostModal.style.display = "none";
-            }
-        });
-    }
-
-    
-    if (editPostModal && closeEditPostModalBtn) {
-        closeEditPostModalBtn.addEventListener("click", () => {
-            editPostModal.style.display = "none";
-        });
-
-        window.addEventListener("click", function (event) {
-            if (event.target === editPostModal) {
-                editPostModal.style.display = "none";
-            }
-        });
-    }
-
-   
-    if (saveEditPostBtn) {
-        saveEditPostBtn.addEventListener("click", saveEditedPost);
     }
 }
 
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
-}
-
-window.closeModal = closeModal;
-window.saveEditedPost = saveEditedPost;
+document.getElementById("saveEditPostBtn").addEventListener("click", saveEditedPost);
 
 window.openEditModal = openEditModal;
 window.deleteUserPost = deleteUserPost;
-window.openPost = openPost;
+window.closeModal = closeModal;

@@ -145,6 +145,52 @@ body {
     margin-top: 20px;
 }
 
+.update-profile {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.update-profile input,
+.update-profile textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
+
+.update-profile button {
+    background: #ff7f50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.update-profile button:hover {
+    background: #ff6347;
+}
+
+.edit-profile-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.edit-profile-btn:hover {
+    color: var(--secondary-color);
+}
+
 .post {
     position: relative;
     background: rgba(255, 255, 255, 0.1);
@@ -303,9 +349,6 @@ body {
     color: var(--primary-color);
 }
 
-
-
-/* Fade-in animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
