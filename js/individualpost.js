@@ -1,11 +1,10 @@
-import { fetchPostById, sendComment } from './api.js';
+import { fetchPostById, sendComment, sendReactToPost } from './api.js';
 
 async function seeOnePost() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const postId = urlParams.get("id");
+    const postId = urlParams.get("id");;
 
-    console.log("Post ID from URL:", postId);
 
     if (!postId) {
         console.error("Did not find Post ID.");
@@ -13,7 +12,6 @@ async function seeOnePost() {
     }
 
     const accessToken = localStorage.getItem('token');
-    console.log("Access token from localStorage:", accessToken);
 
     if (!accessToken) {
         throw new Error('No access token found');
@@ -21,7 +19,6 @@ async function seeOnePost() {
 
     try {
         const post = await fetchPostById(postId, accessToken);
-        console.log("Post data:", post);
 
         const postContainer = document.getElementById("OnePost");
 
@@ -53,8 +50,8 @@ async function seeOnePost() {
 }
 
 
-async function loadComments(postId ) {
-    const accessToken = localStorage.getItem('token'); // 🔹 Hent token
+async function loadComments(postId) {
+    const accessToken = localStorage.getItem('token');
 
     if (!accessToken) {
         console.error("Ingen tilgangstoken funnet.");
@@ -76,8 +73,6 @@ async function loadComments(postId ) {
         if (!response.ok) {
             throw new Error(data.message || "Kunne ikke hente kommentarer");
         }
-
-        console.log("Hentet kommentarer:", data.data.comments);
 
         const commentContainer = document.getElementById("commentContainer");
         commentContainer.innerHTML = ""; 
@@ -109,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             await sendComment(postId, commentText, localStorage.getItem("token"));
-            console.log("Kommentar sendt!");
+            alert("Kommentar sendt!");
 
             commentInput.value = "";
             await loadComments(postId); 
@@ -119,5 +114,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+const accessToken = localStorage.getItem('token');
+const postId = 7259;  
+const symbol = "👍";    
+
+sendReactToPost(postId, symbol, accessToken)
+    .then(response => {
+        console.log("Reaction sent successfully:", response);
+    })
+    .catch(error => {
+        console.error("Error sending reaction:", error);
+    });
+
 
 seeOnePost();
