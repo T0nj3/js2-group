@@ -114,17 +114,47 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-const accessToken = localStorage.getItem('token');
-const postId = 7259;  
-const symbol = "👍";    
 
-sendReactToPost(postId, symbol, accessToken)
-    .then(response => {
-        console.log("Reaction sent successfully:", response);
-    })
-    .catch(error => {
-        console.error("Error sending reaction:", error);
-    });
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const postId = urlParams.get("id");  
+const accessToken = localStorage.getItem('token');  
+const symbol = "👍";  
+const likeBtn = document.getElementById("likeBtn");  
+
+
+const likeButton = localStorage.getItem(`likeButton_${postId}`);  
+
+
+if (likeButton === "true") {
+    likeBtn.textContent = "Likt";  
+} else {
+    likeBtn.textContent = "Like";  
+}
+
+
+likeBtn.addEventListener("click", async () => {
+
+    try {
+        
+        const response = await sendReactToPost(postId, symbol, accessToken);
+
+       
+        console.log("API Response:", response);
+
+        localStorage.setItem(`likeButton_${postId}`, "true");
+
+        likeBtn.textContent = "Likt";
+        
+
+        alert("Du har likt innlegget!");
+
+    } catch (error) {
+        console.error("Feil ved innsending av like:", error);
+    }
+});
+
+
 
 
 seeOnePost();

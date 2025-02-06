@@ -147,7 +147,7 @@ export async function getComment( commentText,) {
 
 export async function sendReactToPost(postId, symbol, accessToken) {
   try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/react/`, {
+      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/react/${symbol}`, {
           method: "PUT",  
           headers: {
               "Content-Type": "application/json",
