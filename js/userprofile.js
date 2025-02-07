@@ -276,8 +276,8 @@ function openEditModal(postId) {
     }
 
     document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
-    document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
-    document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
+document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
+document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
 
     const modal = document.getElementById("editPostModal");
     modal.dataset.postId = postId;

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../css/userprofile.css">
     <link rel="stylesheet" href="../css/header_footer.css">
+    <script type="module" src="../js/followers.js"></script>
     <script type="module" src="../js/userprofile.js"></script>
     <script src="../js/logout.js"></script>
 </head>
@@ -32,16 +33,19 @@
     
     <main>
         <div id="profileContainer" class="profile-container"></div>
-
-        
+    
+        <div class="follow-buttons">
+            <button id="showFollowersBtn">Followers</button>
+            <button id="showFollowingBtn">Following</button>
+        </div>
+    
         <button class="add-post-btn" id="openPostForm">
             <i class="fas fa-plus"></i>
         </button>
     
-        
         <div id="newPostModal" class="modal">
             <div class="modal-content">
-                <span class="close">&times;</span> 
+                <span class="close" onclick="closeModal('newPostModal')">&times;</span>
                 <h3>Create a New Post</h3>
                 <input type="text" id="postTitle" placeholder="Post title">
                 <textarea id="postBody" placeholder="Write something..."></textarea>
@@ -49,24 +53,46 @@
                 <button id="createPostBtn">Post</button>
             </div>
         </div>
-
-      
-<div id="editPostModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('editPostModal')">&times;</span>
-        <h3>Edit Post</h3>
-        <input type="text" id="editPostTitle" placeholder="Post title">
-        <textarea id="editPostBody" placeholder="Write something..."></textarea>
-        <input type="text" id="editPostImage" placeholder="Image URL (optional)">
-        <button id="saveEditPostBtn">Save Changes</button>
-    </div>
-</div>
     
-       
+        <div id="editPostModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('editPostModal')">&times;</span>
+                <h3>Edit Post</h3>
+                <input type="text" id="editPostTitle" placeholder="Post title">
+                <textarea id="editPostBody" placeholder="Write something..."></textarea>
+                <input type="text" id="editPostImage" placeholder="Image URL (optional)">
+                <button id="saveEditPostBtn">Save Changes</button>
+            </div>
+        </div>
+    
         <div id="postsContainer" class="posts-container"></div>
-    </main>
     
-    <script type="module" src="../js/userprofile.js"></script>
+        <section class="explore-profiles">
+            <h2>Explore Profiles</h2>
+            <input type="text" id="searchProfiles" placeholder="Search profiles...">
+            <div id="profilesContainer"></div>
+        </section>
+    
+        <div id="followersModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('followersModal')">&times;</span>
+                <h3>Followers</h3>
+                <ul id="followersList"></ul>
+            </div>
+        </div>
+    
+        <div id="followingModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('followingModal')">&times;</span>
+                <h3>Following</h3>
+                <ul id="followingList"></ul>
+            </div>
+        </div>
+        <div class="follow-stats">
+            <span>Followers: <span id="followersCount">0</span></span>
+            <span>Following: <span id="followingCount">0</span></span>
+        </div>
+    </main>
 
 </body>
 </html>
