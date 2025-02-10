@@ -31,18 +31,23 @@
         </div>
     </header>
     
+ 
     <main>
         <div id="profileContainer" class="profile-container"></div>
-    
+
         <div class="follow-buttons">
-            <button id="showFollowersBtn">Followers</button>
-            <button id="showFollowingBtn">Following</button>
+            <button id="showFollowersBtn">
+                Followers (<span id="followersCount">0</span>)
+            </button>
+            <button id="showFollowingBtn">
+                Following (<span id="followingCount">0</span>)
+            </button>
         </div>
-    
+
         <button class="add-post-btn" id="openPostForm">
             <i class="fas fa-plus"></i>
         </button>
-    
+
         <div id="newPostModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('newPostModal')">&times;</span>
@@ -53,7 +58,7 @@
                 <button id="createPostBtn">Post</button>
             </div>
         </div>
-    
+
         <div id="editPostModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('editPostModal')">&times;</span>
@@ -64,15 +69,16 @@
                 <button id="saveEditPostBtn">Save Changes</button>
             </div>
         </div>
-    
+
         <div id="postsContainer" class="posts-container"></div>
-    
+
         <section class="explore-profiles">
             <h2>Explore Profiles</h2>
             <input type="text" id="searchProfiles" placeholder="Search profiles...">
             <div id="profilesContainer"></div>
         </section>
-    
+
+
         <div id="followersModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('followersModal')">&times;</span>
@@ -80,7 +86,7 @@
                 <ul id="followersList"></ul>
             </div>
         </div>
-    
+
         <div id="followingModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('followingModal')">&times;</span>
@@ -88,10 +94,7 @@
                 <ul id="followingList"></ul>
             </div>
         </div>
-        <div class="follow-stats">
-            <span>Followers: <span id="followersCount">0</span></span>
-            <span>Following: <span id="followingCount">0</span></span>
-        </div>
+
     </main>
 
 </body>
