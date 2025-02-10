@@ -41,6 +41,7 @@ async function fetchProfile(username) {
     }
 }
 
+
 function displayProfile(data) {
     if (!data || typeof data !== "object") {
         console.error("Ugyldig profildata mottatt:", data);
@@ -48,20 +49,24 @@ function displayProfile(data) {
     }
 
     const profileContainer = document.getElementById("profileContainer");
+    if (!profileContainer) {
+        console.error("Feil: Kunne ikke finne #profileContainer");
+        return;
+    }
+
+    profileContainer.innerHTML = "";  
 
 
     const nameElement = document.createElement("h2");
-    nameElement.textContent = data.name;
+    nameElement.textContent = data.data.name;
 
     const bioElement = document.createElement("p");
-    bioElement.textContent = data.bio || "Ingen bio tilgjengelig.";
-
+    bioElement.textContent = data.data.bio || "Ingen bio tilgjengelig.";
 
     const avatarElement = document.createElement("img");
-    avatarElement.src = data.avatar || "default-avatar.png";
+    avatarElement.src = data.data.avatar?.url || "default-avatar.png"; 
     avatarElement.alt = "Profilbilde";
     avatarElement.width = 150;
-
 
     profileContainer.appendChild(nameElement);
     profileContainer.appendChild(bioElement);
