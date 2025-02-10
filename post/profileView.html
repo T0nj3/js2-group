@@ -4,11 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="se profiles" content="see all the profile of the users at lyks">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/userprofile.css">
+    <link rel="stylesheet" href="../css/header_footer.css">
     <script type="module" src="../js/profileView.js" defer></script>
     <title>Document</title>
 </head>
 <body>
-    <h1>test</h1>
-    <div id="profileContainer"></div>
+    <body>
+        <header class="header">
+            <a href="../post/feedpage.html"><div class="logo">Lynk</div></a>
+            <div class="header-bottom">
+                <div class="icons">
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                    <i class="fas fa-bell"></i>
+                    <a href="/post/userprofile.html" class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    <button id="logoutBtn" class="logout-button">Logout</button>
+                </div>
+            </div>
+        </header>
+    <div id="profileContainer" class="profile-container"></div>
 </body>
 </html>
