@@ -56,10 +56,13 @@ function displayProfiles(profiles) {
             <button class="follow-btn" data-username="${profile.name}">
                 ${isFollowing ? "Unfollow" : "Follow"}
             </button>
+            <a href="../post/profileview.html?profile=${encodeURIComponent(profile.name)}" class="view-profile-btn">View Profile</a>
         `;
 
         container.appendChild(profileCard);
     });
+
+    
 
    
     document.querySelectorAll(".follow-btn").forEach(button => {
