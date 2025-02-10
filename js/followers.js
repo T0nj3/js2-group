@@ -3,13 +3,13 @@ const X_NOROFF_API_KEY = "580b33a9-04f3-4da3-bb38-de9adcf9d9f8";
 const token = localStorage.getItem("token");
 const username = localStorage.getItem("name");
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     if (!token || !username) {
         console.error("No token or username found.");
         return;
     }
 
-    fetchProfiles();
+    await fetchProfiles();
     setupSearch();
 });
 
@@ -23,13 +23,9 @@ async function fetchProfiles() {
         });
 
         if (!response.ok) throw new Error("Failed to fetch profiles.");
-
         const data = await response.json();
-        
 
-       
         displayProfiles(data.data);
-
     } catch (error) {
         console.error(error.message);
     }
@@ -43,42 +39,86 @@ function displayProfiles(profiles) {
         const profileCard = document.createElement("div");
         profileCard.className = "profile-card";
 
-        const isFollowing = profile.followers?.some(f => f.name === localStorage.getItem("name"));
+        const followButton = document.createElement("button");
+        followButton.className = "follow-btn";
+        followButton.dataset.username = profile.name;
+
+
+        const followingList = JSON.parse(localStorage.getItem("followingList")) || [];
+        const isFollowing = followingList.includes(profile.name);
+        followButton.textContent = isFollowing ? "Followed" : "Follow";
+
+        followButton.addEventListener("click", async () => {
+            await toggleFollow(profile.name, followButton);
+        });
 
         profileCard.innerHTML = `
             <img src="${profile.avatar?.url || 'https://via.placeholder.com/150'}" alt="${profile.name}">
             <h4>${profile.name}</h4>
-            <button class="follow-btn" data-username="${profile.name}">
-                ${isFollowing ? "Unfollow" : "Follow"}
-            </button>
             <a href="../post/profileview.html?profile=${encodeURIComponent(profile.name)}" class="view-profile-btn">View Profile</a>
         `;
 
+        profileCard.appendChild(followButton);
         container.appendChild(profileCard);
-    });
-
-    
-
-   
-    document.querySelectorAll(".follow-btn").forEach(button => {
-        button.addEventListener("click", () => {
-            toggleFollow(button.dataset.username, button);
-        });
     });
 }
 
-async function fetchUserProfile(username) {
+async function toggleFollow(profileName, button) {
+    const followingList = JSON.parse(localStorage.getItem("followingList")) || [];
+    const isFollowing = followingList.includes(profileName);
+
     try {
-        const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
-            headers: { "Authorization": `Bearer ${token}`, "X-Noroff-API-Key": X_NOROFF_API_KEY }
+        let url;
+        if (isFollowing) {
+
+            console.log(`Attempting to unfollow ${profileName}`);
+            url = `${API_BASE_URL}/profiles/${profileName}/unfollow`;
+        } else {
+
+            console.log(`Attempting to follow ${profileName}`);
+            url = `${API_BASE_URL}/profiles/${profileName}/follow`;
+        }
+
+
+        console.log("API Request URL: ", url);
+        console.log("Method: PUT");
+        console.log("Headers: ", {
+            "Authorization": `Bearer ${token}`,
+            "X-Noroff-API-Key": X_NOROFF_API_KEY,
+            "Content-Type": "application/json"
         });
 
-        if (!response.ok) throw new Error("Failed to fetch user profile.");
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: { 
+                "Authorization": `Bearer ${token}`,
+                "X-Noroff-API-Key": X_NOROFF_API_KEY,
+                "Content-Type": "application/json"
+            }
+        });
 
-        return (await response.json()).data;
+        const responseData = await response.json();
+        console.log("Response Status: ", response.status);
+        console.log("Response Data: ", responseData);
+
+        if (!response.ok) {
+            throw new Error(isFollowing ? "Failed to unfollow user." : "Failed to follow user.");
+        }
+
+
+        if (isFollowing) {
+            const newFollowingList = followingList.filter(name => name !== profileName);
+            localStorage.setItem("followingList", JSON.stringify(newFollowingList));
+            button.textContent = "Follow";
+            console.log(`${username} has unfollowed ${profileName}`); 
+        } else {
+            followingList.push(profileName);
+            localStorage.setItem("followingList", JSON.stringify(followingList));
+            button.textContent = "Followed";
+            console.log(`${username} has followed ${profileName}`);
+        }
     } catch (error) {
-        console.error(error.message);
-        return null;
+        console.error("Error: ", error.message);
     }
 }
 
