@@ -11,12 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchProfiles();
     setupSearch();
-    fetchUserFollowStats();
-
-    document.getElementById("showFollowersBtn").addEventListener("click", fetchFollowers);
-    document.getElementById("showFollowingBtn").addEventListener("click", fetchFollowing);
 });
-
 
 async function fetchProfiles() {
     try {
@@ -27,7 +22,7 @@ async function fetchProfiles() {
             }
         });
 
-        if (!response.ok) throw new Error("Kunne ikke hente profiler.");
+        if (!response.ok) throw new Error("Failed to fetch profiles.");
 
         const data = await response.json();
         
@@ -72,54 +67,6 @@ function displayProfiles(profiles) {
     });
 }
 
-async function toggleFollow(username, button) {
-    
-
-    if (!username || username.trim() === "") {
-        console.error("Invalid username");
-        return;
-    }
-
-    const isFollowing = button.innerText === "Unfollow";
-    const endpoint = isFollowing ? "unfollow" : "follow";
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/profiles/${username}/${endpoint}`, {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "X-Noroff-API-Key": X_NOROFF_API_KEY
-            }
-        });
-
-        if (!response.ok) {
-            let errorMessage = `Failed to ${endpoint} user: ${username}`;
-            try {
-                const errorData = await response.json();
-                if (errorData.errors) {
-                    errorMessage += ` - ${errorData.errors[0].message}`;
-                }
-            } catch (jsonError) {
-                console.error("Could not parse error response");
-            }
-
-            console.error(errorMessage);
-            alert(errorMessage);
-            return;
-        }
-
-       
-        
-        
-        button.innerText = isFollowing ? "Follow" : "Unfollow";
-    } catch (error) {
-        console.error("Network error or API is down:", error);
-        alert("Network error, please try again later.");
-    }
-}
-
-fetchProfiles();
-
 async function fetchUserProfile(username) {
     try {
         const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
@@ -135,63 +82,6 @@ async function fetchUserProfile(username) {
     }
 }
 
-
-async function fetchUserFollowStats() {
-    try {
-        const profile = await fetchUserProfile(username);
-        if (!profile) return;
-
-        document.getElementById("followersCount").textContent = profile.followers?.length || 0;
-        document.getElementById("followingCount").textContent = profile.following?.length || 0;
-    } catch (error) {
-        console.error("Failed to fetch follow stats:", error);
-    }
-}
-
-
-async function fetchFollowers() {
-    try {
-        const profile = await fetchUserProfile(username);
-        if (!profile) return;
-
-        displayFollowers(profile.followers);
-    } catch (error) {
-        console.error("Failed to fetch followers:", error);
-    }
-}
-
-
-function displayFollowers(followers) {
-    const list = document.getElementById("followersList");
-    list.innerHTML = followers.map(f => `<li>${f.name}</li>`).join('');
-    document.getElementById("followersModal").style.display = "flex";
-}
-
-
-async function fetchFollowing() {
-    try {
-        const profile = await fetchUserProfile(username);
-        if (!profile) return;
-
-        displayFollowing(profile.following);
-    } catch (error) {
-        console.error("Failed to fetch following:", error);
-    }
-}
-
-
-function displayFollowing(following) {
-    const list = document.getElementById("followingList");
-    list.innerHTML = following.map(f => `<li>${f.name}</li>`).join('');
-    document.getElementById("followingModal").style.display = "flex";
-}
-
-
-function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
-}
-
-
 function setupSearch() {
     document.getElementById("searchProfiles").addEventListener("input", function () {
         const query = this.value.toLowerCase();
@@ -203,6 +93,3 @@ function setupSearch() {
         });
     });
 }
-
-window.toggleFollow = toggleFollow;
-window.closeModal = closeModal;
