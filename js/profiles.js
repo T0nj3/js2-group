@@ -54,7 +54,7 @@ function displayAllProfiles(profiles) {
                  class="profile-avatar">
             <h3>${profile.name || 'Unknown User'}</h3>
             <p>${profile.bio || 'No bio available.'}</p>
-            <a href="/profiles.html?profile=${encodeURIComponent(profile.name)}" class="view-profile-btn">View Profile</a>
+            <a href="../post/profileview.html?profile=${encodeURIComponent(profile.name)}" class="view-profile-btn">View Profile</a>
         </div>
     `).join('');
 }
