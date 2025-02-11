@@ -12,14 +12,9 @@
 </head>
 <body>
     <header class="header">
-        <a href="../post/feedpage.html"><div class="logo">Lynk</div></a>
+        <div class="logo">Lynk</div>
         <div class="header-bottom">
             <div class="icons">
-                <div class="search-icon">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchProfile" placeholder="Search for a user...">
-                    <button id="searchBtn">Search</button>
-                </div>
                 <i class="fas fa-bell"></i>
                 <a href="/post/userprofile.html" class="user-icon">
                     <i class="fas fa-user"></i>
@@ -29,20 +24,23 @@
         </div>
     </header>
 
+
     <h1>Explore Post</h1>
     <div id="OnePost"></div>  
-
+    
     <div id="commentSection">  
         <div id="likeButton">
             <button id="likeBtn">Like</button>
         </div>
         <div id="commentContainer">
+            <p><strong>This is a test</strong></p>
+            <button class="reply-btn">Reply</button>
         </div>
         <div id="commentForm">
-            <input type="text" id="commentInput" placeholder="Skriv en kommentar">
-            <button id="commentBtn">Kommenter</button>
+            <input type="text" id="commentInput" placeholder="Write a comment">
+            <button id="commentBtn">Comment</button>
         </div>
-    </div> 
+    </div>  
 
     <script type="module" src="../js/individualpost.js"></script>
 </body>
