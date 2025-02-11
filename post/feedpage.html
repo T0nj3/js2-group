@@ -17,10 +17,6 @@
         <div class="logo">Lynk</div>
         <div class="header-bottom">
             <div class="icons">
-                <div class="search-icon">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search...">
-                </div>
                 <i class="fas fa-bell"></i>
                 <a href="/post/userprofile.html" class="user-icon">
                     <i class="fas fa-user"></i>
@@ -29,7 +25,16 @@
             </div>
         </div>
     </header>
-    <div id="postContainer"></div>
+    
+    
+    <div class="main-container">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search posts..." />
+        </div>
+    
+        <div id="postContainer"></div>
+    </div>
+    
     <script type="module" src="../js/feed.js"></script>
 </body>
 </html>
