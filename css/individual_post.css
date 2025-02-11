@@ -1,91 +1,232 @@
-body{
-    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
-}
-h1{
-    text-align: center;
-    margin-top: 120px;
-    color: #9e0e0e;
-}
-#OnePost {
-    width: 400px; 
-    margin: 20px auto;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    cursor: pointer;
-}
-#OnePost img {
-    width: 100%;
-    border-radius: 2%;
-    background-color: #9e0e0e;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-#OnePost h2 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #ffffff;
-    margin: 10px 0;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-#OnePost p {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 10px;
+:root {
+    --primary-color: #ff7e5f;
+    --secondary-color: #feb47b;
+    --accent-color: #ffffff;
+    --background-gradient-start: #6a11cb;
+    --background-gradient-end: #ff7e5f;
+    --text-color: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.15);
+    --blur-intensity: 20px;
+    --glow-color: rgba(255, 255, 255, 0.4);
+    --font-family: 'Poppins', sans-serif;
 }
-#commentSection {
-    width: 400px; 
+
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background: linear-gradient(135deg, var(--background-gradient-start), var(--background-gradient-end));
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+}
+
+
+#OnePost {
+    width: 450px;
     margin: 20px auto;
-    margin-bottom: 400px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: var(--glass-bg);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
-#commentForm {
+
+#OnePost img {
     width: 100%;
-    padding: 10px;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin: 10px 0;
+    border: 3px solid var(--glow-color);
 }
-#commentContainer p {
-    width: calc(100% - 20px); 
-    margin: 10px auto;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
+
+#OnePost:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+}
+
+
+#likeButton {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+#likeBtn {
+    padding: 10px 20px;
+    background: var(--primary-color);
+    border: none;
+    border-radius: 8px;
+    color: var(--accent-color);
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-    font-weight: 900;
+    transition: 0.3s;
+}
+
+#likeBtn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+#commentSection {
+    width: 450px;
+    margin: 30px auto;
+    padding: 20px;
+    background: var(--glass-bg);
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+
+#commentContainer {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+#commentContainer p {
+    width: calc(100% - 20px);
+    margin: 10px auto;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-weight: bold;
+    color: var(--accent-color);
+    position: relative;
+    transition: 0.3s;
+}
+
+#commentContainer p:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.reply-btn {
+    background: var(--primary-color);
+    border: none;
+    color: var(--accent-color);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    width: fit-content;
+    margin: 5px auto;
+    transition: 0.3s;
+}
+
+.reply-btn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+.reply-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+.reply-input {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid var(--glow-color);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent-color);
+    font-size: 14px;
+    font-weight: bold;
+    outline: none;
+    transition: 0.3s;
+}
+
+.reply-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+
+.reply-submit {
+    background: var(--primary-color);
+    border: none;
+    color: var(--accent-color);
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.reply-submit:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+#commentForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
 }
 
 #commentInput {
     width: 100%;
-    padding: 10px;
-    margin: 5px auto;
-    background: rgb(255, 255, 255);
-    border-radius: 5px;
-    border: none;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid var(--glow-color);
     outline: none;
-    color: #6e33dc;
-    font-size: 14px;
-    font-weight: 900;
+    color: var(--accent-color);
+    font-size: 16px;
+    font-weight: bold;
+    backdrop-filter: blur(10px);
 }
-#commentBtn{
+
+#commentInput::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#commentBtn {
     width: 100%;
-    padding: 10px;
-    margin: 5px auto;
-    background: #6e33dc;
-    border-radius: 5px;
+    padding: 12px;
+    background: var(--primary-color);
     border: none;
-    outline: none;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 900;
+    border-radius: 8px;
+    color: var(--accent-color);
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
-#commentBtn:hover{
-    background: #ffffff;
-    color: #6e33dc;
-    transition: 0.4s;
+
+#commentBtn:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+@media screen and (max-width: 600px) {
+    #OnePost, #commentSection {
+        width: 90%;
+    }
 }

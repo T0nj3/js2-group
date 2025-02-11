@@ -52,7 +52,7 @@ async function loadComments(postId) {
     const accessToken = localStorage.getItem('token');
 
     if (!accessToken) {
-        console.error("Ingen tilgangstoken funnet.");
+        console.error("No access token found.");
         return;
     }
 
@@ -69,11 +69,19 @@ async function loadComments(postId) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || "Kunne ikke hente kommentarer");
+            throw new Error(data.message || "Could not fetch comments");
         }
 
         const commentContainer = document.getElementById("commentContainer");
         commentContainer.innerHTML = "";
+
+        if (!data.data.comments || data.data.comments.length === 0) {
+            const noComments = document.createElement("p");
+            noComments.textContent = "No comments yet. Be the first to comment!";
+            noComments.classList.add("no-comments");
+            commentContainer.appendChild(noComments);
+            return;
+        }
 
         data.data.comments.forEach(comment => {
             const commentElement = document.createElement("div");
@@ -83,7 +91,8 @@ async function loadComments(postId) {
             commentText.textContent = comment.body;
 
             const replyButton = document.createElement("button");
-            replyButton.textContent = "Svar";
+            replyButton.textContent = "Reply";
+            replyButton.classList.add("reply-btn"); 
             replyButton.addEventListener("click", () => showReplyInput(comment.id, postId, commentElement));
 
             const replyContainer = document.createElement("div");
@@ -105,7 +114,7 @@ async function loadComments(postId) {
         });
 
     } catch (error) {
-        console.error("Feil ved henting av kommentarer:", error);
+        console.error("Error fetching comments:", error);
     }
 }
 
@@ -120,7 +129,7 @@ function showReplyInput(commentId, postId, commentElement) {
 
     const replyInput = document.createElement("input");
     replyInput.type = "text";
-    replyInput.placeholder = "Skriv et svar...";
+    replyInput.placeholder = "Write a reply...";
     replyInput.classList.add("reply-input");
 
     const sendReplyButton = document.createElement("button");
