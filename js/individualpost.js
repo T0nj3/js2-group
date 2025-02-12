@@ -171,7 +171,7 @@ async function sendReply(commentId, postId, replyText, commentElement) {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || "Kunne ikke sende svaret.");
+            throw new Error(data.message || "could not send reply.");
         }
 
         const replyElement = document.createElement("p");
@@ -180,10 +180,10 @@ async function sendReply(commentId, postId, replyText, commentElement) {
 
         commentElement.querySelector(".reply-input-container").remove();
 
-        console.log("Svar sendt!");
+        console.log("reply sent!");
 
     } catch (error) {
-        console.error("Feil ved innsending av svar:", error);
+        console.error("Error sending reply:", error);
     }
 }
 
@@ -210,11 +210,11 @@ likeBtn.addEventListener("click", async () => {
         console.log("API Response:", response);
 
         localStorage.setItem(`likeButton_${postId}`, "true");
-        likeBtn.textContent = "Likt";
+        likeBtn.textContent = "Liked";
 
-        alert("Du har likt innlegget!");
+        alert("Your post has been liked!");
     } catch (error) {
-        console.error("Feil ved innsending av like:", error);
+        console.error("Error sending like:", error);
     }
 });
 
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("commentBtn").addEventListener("click", async () => {
         const commentText = commentInput.value.trim();
         if (commentText === "") {
-            console.error("Kommentaren er tom.");
+            console.error("commentText is empty");
             return;
         }
 
@@ -236,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await loadComments(postId);
 
         } catch (error) {
-            console.error("Feil ved innsending av kommentar:", error);
+            console.error("error sending comment:", error);
         }
     });
 });
