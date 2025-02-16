@@ -1,32 +1,28 @@
+import { registerUser } from "./api.js";
+
 document.getElementById("registerForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const messageElement = document.getElementById("message");
 
-  const userData = { name, email, password };
+    const userData = { name, email, password };
 
-  try {
-      const response = await fetch("https://v2.api.noroff.dev/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData)
-      });
+    try {
+        const result = await registerUser(userData);
 
-      const result = await response.json();
-
-      if (response.ok) {
-          document.getElementById("message").textContent = "Registration successful! Redirecting to login...";
-          
-          setTimeout(() => {
-              window.location.href = "login.html"; 
-          }, 2000); 
-      } else {
-          document.getElementById("message").textContent = "Error: " + result.errors[0].message;
-      }
-  } catch (error) {
-      document.getElementById("message").textContent = "Something went wrong. Please try again.";
-  }
+        if (result.errors) {
+            messageElement.textContent = "Error: " + result.errors[0].message;
+        } else {
+            messageElement.textContent = "Registration successful! Redirecting to login...";
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 2000);
+        }
+    } catch (error) {
+        messageElement.textContent = "Something went wrong. Please try again.";
+    }
 });
 
