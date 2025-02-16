@@ -209,10 +209,27 @@ export async function login(userData) {
       throw new Error(result.errors ? result.errors[0].message : 'Login failed');
     }
 
-    return result.data; // Returning the response data (which contains the token and user info)
+    return result.data; 
   } catch (error) {
     console.error('Login API Error:', error.message);
-    throw error; // Propagate the error to the caller
+    throw error; 
   }
 }
 
+export async function registerUser(userData) {
+  try {
+      const response = await fetch("https://v2.api.noroff.dev/auth/register", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8"
+          },          
+          body: JSON.stringify(userData)
+      });
+
+      return await response.json();
+  } catch (error) {
+      console.error("Error during registration:", error);
+      throw error;
+  }
+}
