@@ -233,3 +233,26 @@ export async function registerUser(userData) {
       throw error;
   }
 }
+export async function updateUserProfile(username, bio, avatar, banner) {
+  const API_BASE_URL = "https://v2.api.noroff.dev/social"; 
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
+      method: "PUT",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "X-Noroff-API-Key": X_NOROFF_API_KEY
+      },
+      body: JSON.stringify({ bio, avatar: { url: avatar }, banner: { url: banner } })
+  });
+
+  if (!response.ok) {
+      console.error("Failed to update profile.");
+      return null;
+  }
+  
+  return await response.json();
+}
+
