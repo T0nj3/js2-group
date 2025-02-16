@@ -1,5 +1,6 @@
 export const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
 
+
 export async function getAllPosts() {
   const accessToken = localStorage.getItem('token');
 
@@ -169,3 +170,25 @@ export async function sendReactToPost(postId, symbol, accessToken) {
       throw error; 
   }
 }
+
+export async function fetchComments(postId, accessToken) {
+  try {
+      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}?_comments=true`, {
+          method: "GET",
+          headers: {
+              "Authorization": `Bearer ${accessToken}`,
+              "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8",
+              "Content-Type": "application/json"
+          }
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Could not fetch comments");
+
+      return data.data || { comments: [] }; 
+  } catch (error) {
+      console.error("Error fetching comments:", error);
+      return { comments: [] }; 
+  }
+}
+

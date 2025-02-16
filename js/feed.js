@@ -32,15 +32,29 @@ const displayPosts = async (searchQuery = "") => {
             const postElement = document.createElement("div");
             postElement.classList.add("post");
 
-            postElement.innerHTML = `
-                <h2>${post.title || "No title"}</h2>
-                <p>${post.body || "No content"}</p>
-                <p><strong>Tags:</strong> ${post.tags ? post.tags.join(", ") : "No tags"}</p>
-                ${post.media && post.media.url 
-                    ? `<img src="${post.media.url}" alt="${post.media.alt || "Image"}" class="post-image">`
-                    : ""
-                }
-            `;
+            const titleElement = document.createElement("h2");
+            titleElement.textContent = post.title || "No title";
+            postElement.appendChild(titleElement);
+
+            const bodyElement = document.createElement("p");
+            bodyElement.textContent = post.body || "No content";
+            postElement.appendChild(bodyElement);
+
+            const tagsElement = document.createElement("p");
+            const strongElement = document.createElement("strong");
+            strongElement.textContent = "Tags: ";
+            tagsElement.appendChild(strongElement);
+            tagsElement.appendChild(document.createTextNode(post.tags ? post.tags.join(", ") : "No tags"));
+            postElement.appendChild(tagsElement);
+
+            if (post.media && post.media.url) {
+                const imageElement = document.createElement("img");
+                imageElement.src = post.media.url;
+                imageElement.alt = post.media.alt || "Image";
+                imageElement.classList.add("post-image");
+                postElement.appendChild(imageElement);
+            }
+
             postElement.addEventListener("click", () => {
                 window.location.href = `../post/individualpost.html?id=${post.id}`;
             });
