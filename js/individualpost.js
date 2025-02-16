@@ -1,30 +1,22 @@
-import { fetchPostById, sendComment, sendReactToPost } from './api.js';
+import { fetchPostById, sendComment, sendReactToPost, fetchComments } from './api.js';
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await seeOnePost();
+    setupLikeButton();
+    setupCommentButton();
+});
 
 async function seeOnePost() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const postId = urlParams.get("id");
-
-    if (!postId) {
-        console.error("Did not find Post ID.");
-        return;
-    }
+    const postId = new URLSearchParams(window.location.search).get("id");
+    if (!postId) return console.error("Did not find Post ID.");
 
     const accessToken = localStorage.getItem('token');
-
-    if (!accessToken) {
-        throw new Error('No access token found');
-    }
+    if (!accessToken) throw new Error('No access token found');
 
     try {
         const post = await fetchPostById(postId, accessToken);
-
         const postContainer = document.getElementById("OnePost");
-
-        if (!postContainer) {
-            console.error("Element with id 'OnePost' not found in the DOM");
-            return;
-        }
+        if (!postContainer) return console.error("Element with id 'OnePost' not found in the DOM");
 
         const titleElement = document.createElement("h2");
         titleElement.textContent = post.data.title;
@@ -34,15 +26,14 @@ async function seeOnePost() {
         bodyElement.textContent = post.data.body;
         postContainer.appendChild(bodyElement);
 
-        const imgElement = document.createElement("img");
-        if (post.data.media && post.data.media.url) {
+        if (post.data.media?.url) {
+            const imgElement = document.createElement("img");
             imgElement.src = post.data.media.url;
             imgElement.alt = "Post image";
             postContainer.appendChild(imgElement);
         }
 
         await loadComments(postId);
-
     } catch (error) {
         console.error("Error:", error.message);
     }
@@ -50,32 +41,15 @@ async function seeOnePost() {
 
 async function loadComments(postId) {
     const accessToken = localStorage.getItem('token');
-
-    if (!accessToken) {
-        console.error("No access token found.");
-        return;
-    }
+    if (!accessToken) return console.error("No access token found.");
 
     try {
-        const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}?_comments=true`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8",
-                "Content-Type": "application/json"
-            }
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "Could not fetch comments");
-        }
+        const data = await fetchComments(postId, accessToken);
 
         const commentContainer = document.getElementById("commentContainer");
         commentContainer.innerHTML = "";
 
-        if (!data.data.comments || data.data.comments.length === 0) {
+        if (!data.comments?.length) {
             const noComments = document.createElement("p");
             noComments.textContent = "No comments yet. Be the first to comment!";
             noComments.classList.add("no-comments");
@@ -83,7 +57,7 @@ async function loadComments(postId) {
             return;
         }
 
-        data.data.comments.forEach(comment => {
+        data.comments.forEach(comment => {
             const commentElement = document.createElement("div");
             commentElement.classList.add("comment");
 
@@ -92,27 +66,21 @@ async function loadComments(postId) {
 
             const replyButton = document.createElement("button");
             replyButton.textContent = "Reply";
-            replyButton.classList.add("reply-btn"); 
+            replyButton.classList.add("reply-btn");
             replyButton.addEventListener("click", () => showReplyInput(comment.id, postId, commentElement));
 
             const replyContainer = document.createElement("div");
             replyContainer.classList.add("replies");
 
-            if (comment.replies && comment.replies.length > 0) {
-                comment.replies.forEach(reply => {
-                    const replyElement = document.createElement("p");
-                    replyElement.textContent = `↪ ${reply.body}`;
-                    replyContainer.appendChild(replyElement);
-                });
-            }
+            comment.replies?.forEach(reply => {
+                const replyElement = document.createElement("p");
+                replyElement.textContent = `↪ ${reply.body}`;
+                replyContainer.appendChild(replyElement);
+            });
 
-            commentElement.appendChild(commentText);
-            commentElement.appendChild(replyButton);
-            commentElement.appendChild(replyContainer);
-
+            commentElement.append(commentText, replyButton, replyContainer);
             commentContainer.appendChild(commentElement);
         });
-
     } catch (error) {
         console.error("Error fetching comments:", error);
     }
@@ -120,9 +88,7 @@ async function loadComments(postId) {
 
 function showReplyInput(commentId, postId, commentElement) {
     const existingInput = commentElement.querySelector(".reply-input-container");
-    if (existingInput) {
-        existingInput.remove();
-    }
+    if (existingInput) existingInput.remove();
 
     const replyContainer = document.createElement("div");
     replyContainer.classList.add("reply-input-container");
@@ -133,112 +99,65 @@ function showReplyInput(commentId, postId, commentElement) {
     replyInput.classList.add("reply-input");
 
     const sendReplyButton = document.createElement("button");
-    sendReplyButton.textContent = "Post svar";
+    sendReplyButton.textContent = "Post reply";
     sendReplyButton.addEventListener("click", () => sendReply(commentId, postId, replyInput.value, commentElement));
 
-    replyContainer.appendChild(replyInput);
-    replyContainer.appendChild(sendReplyButton);
-
+    replyContainer.append(replyInput, sendReplyButton);
     commentElement.appendChild(replyContainer);
 }
 
 async function sendReply(commentId, postId, replyText, commentElement) {
-    if (!replyText.trim()) {
-        console.error("Svaret er tomt.");
-        return;
-    }
+    if (!replyText.trim()) return console.error("Reply is empty.");
 
     const accessToken = localStorage.getItem("token");
-
-    if (!accessToken) {
-        console.error("Ingen tilgangstoken funnet.");
-        return;
-    }
+    if (!accessToken) return console.error("No access token found.");
 
     try {
-        const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/comment`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                body: replyText
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "could not send reply.");
-        }
-
-        const replyElement = document.createElement("p");
-        replyElement.textContent = `↪ ${replyText}`;
-        commentElement.querySelector(".replies").appendChild(replyElement);
-
-        commentElement.querySelector(".reply-input-container").remove();
-
-        console.log("reply sent!");
-
+        await sendComment(postId, replyText, accessToken);
+        await loadComments(postId);
     } catch (error) {
         console.error("Error sending reply:", error);
     }
 }
 
-// Like-funksjon
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const postId = urlParams.get("id");
-const accessToken = localStorage.getItem('token');
-const symbol = "👍";
-const likeBtn = document.getElementById("likeBtn");
-
-const likeButton = localStorage.getItem(`likeButton_${postId}`);
-
-if (likeButton === "true") {
-    likeBtn.textContent = "Likt";
-} else {
-    likeBtn.textContent = "Like";
-}
-
-likeBtn.addEventListener("click", async () => {
-    try {
-        const response = await sendReactToPost(postId, symbol, accessToken);
-
-        console.log("API Response:", response);
-
-        localStorage.setItem(`likeButton_${postId}`, "true");
-        likeBtn.textContent = "Liked";
-
-        alert("Your post has been liked!");
-    } catch (error) {
-        console.error("Error sending like:", error);
-    }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
+function setupCommentButton() {
+    const commentBtn = document.getElementById("commentBtn");
     const commentInput = document.getElementById("commentInput");
+    if (!commentBtn || !commentInput) return;
 
-    document.getElementById("commentBtn").addEventListener("click", async () => {
+    commentBtn.addEventListener("click", async () => {
+        const postId = new URLSearchParams(window.location.search).get("id");
         const commentText = commentInput.value.trim();
-        if (commentText === "") {
-            console.error("commentText is empty");
-            return;
-        }
+        if (!commentText) return console.error("Comment is empty");
 
         try {
             await sendComment(postId, commentText, localStorage.getItem("token"));
             alert("Kommentar sendt!");
-
             commentInput.value = "";
             await loadComments(postId);
-
         } catch (error) {
-            console.error("error sending comment:", error);
+            console.error("Error sending comment:", error);
         }
     });
-});
+}
 
-seeOnePost();
+function setupLikeButton() {
+    const postId = new URLSearchParams(window.location.search).get("id");
+    const likeBtn = document.getElementById("likeBtn");
+    if (!likeBtn) return;
+
+    const likeStatus = localStorage.getItem(`likeButton_${postId}`);
+    likeBtn.textContent = likeStatus === "true" ? "Liked!" : "Like";
+
+    likeBtn.addEventListener("click", async () => {
+        try {
+            await sendReactToPost(postId, "👍", localStorage.getItem("token"));
+            localStorage.setItem(`likeButton_${postId}`, "true");
+            likeBtn.textContent = "Liked";
+            alert("Your post has been liked!");
+        } catch (error) {
+            console.error("Error sending like:", error);
+        }
+    });
+}
+
