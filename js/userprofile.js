@@ -1,6 +1,8 @@
 const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
 const API_BASE_URL = "https://v2.api.noroff.dev/social";
 
+import { updateUserProfile, getUserProfile, } from './api.js';
+
 document.addEventListener("DOMContentLoaded", async function () {
     const username = localStorage.getItem("name");
 
@@ -47,105 +49,195 @@ async function displayUserProfile(username) {
         return;
     }
 
-    profileContainer.innerHTML = `
-        <div class="profile-details">
-            <img src="${profile.banner?.url || 'https://via.placeholder.com/600x200'}" class="profile-banner">
-            <div class="profile-header">
-                <img src="${profile.avatar?.url || 'https://via.placeholder.com/150'}" class="profile-avatar">
-                <div class="profile-info">
-                    <h2>${profile.name} 
-                        <button id="editProfileBtn" class="edit-profile-btn">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                    </h2>
-                    <p>${profile.bio || 'No bio available'}</p>
-                </div>
-            </div>
-        </div>
+    profileContainer.innerHTML = '';
 
-        <div id="updateProfileSection" class="update-profile" style="display: none;">
-            <h3>Update profile</h3>
-            <input type="text" id="newAvatar" placeholder="New Avatar URL">
-            <input type="text" id="newBanner" placeholder="New Banner URL">
-            <textarea id="newBio" placeholder="Update bio"></textarea>
-            <button id="updateProfileBtn">Update</button>
-        </div>
-    `;
 
-    document.getElementById("editProfileBtn").addEventListener("click", function () {
-        const updateSection = document.getElementById("updateProfileSection");
-        updateSection.style.display = updateSection.style.display === "none" ? "block" : "none";
-    });
+    const profileDetails = document.createElement("div");
+    profileDetails.className = "profile-details";
 
-    document.getElementById("updateProfileBtn").addEventListener("click", async function () {
-        const bio = document.getElementById("newBio").value.trim();
-        const avatar = document.getElementById("newAvatar").value.trim();
-        const banner = document.getElementById("newBanner").value.trim();
-        await updateUserProfile(username, bio, avatar, banner);
-        await displayUserProfile(username);
+
+    const banner = document.createElement("img");
+    banner.src = profile.banner?.url || 'https://via.placeholder.com/600x200';
+    banner.className = "profile-banner";
+
+
+    const profileHeader = document.createElement("div");
+    profileHeader.className = "profile-header";
+
+
+    const avatar = document.createElement("img");
+    avatar.src = profile.avatar?.url || 'https://via.placeholder.com/150';
+    avatar.className = "profile-avatar";
+
+
+    const profileInfo = document.createElement("div");
+    profileInfo.className = "profile-info";
+
+    const nameElement = document.createElement("h2");
+    nameElement.textContent = profile.name;
+
+
+    const editButton = document.createElement("button");
+    editButton.id = "editProfileBtn";
+    editButton.className = "edit-profile-btn";
+
+    const editIcon = document.createElement("i");
+    editIcon.className = "fas fa-edit";
+
+    editButton.appendChild(editIcon);
+    nameElement.appendChild(editButton);
+
+    const bioElement = document.createElement("p");
+    bioElement.textContent = profile.bio || "No bio available";
+
+    // Bygger sammen elementene
+    profileInfo.appendChild(nameElement);
+    profileInfo.appendChild(bioElement);
+    profileHeader.appendChild(avatar);
+    profileHeader.appendChild(profileInfo);
+    profileDetails.appendChild(banner);
+    profileDetails.appendChild(profileHeader);
+    profileContainer.appendChild(profileDetails);
+
+
+    const updateProfileSection = document.createElement("div");
+    updateProfileSection.id = "updateProfileSection";
+    updateProfileSection.className = "update-profile";
+    updateProfileSection.style.display = "none";
+
+    const updateTitle = document.createElement("h3");
+    updateTitle.textContent = "Update profile";
+
+    const avatarInput = document.createElement("input");
+    avatarInput.type = "text";
+    avatarInput.id = "newAvatar";
+    avatarInput.placeholder = "New Avatar URL";
+
+    const bannerInput = document.createElement("input");
+    bannerInput.type = "text";
+    bannerInput.id = "newBanner";
+    bannerInput.placeholder = "New Banner URL";
+
+    const bioTextarea = document.createElement("textarea");
+    bioTextarea.id = "newBio";
+    bioTextarea.placeholder = "Update bio";
+
+    const updateButton = document.createElement("button");
+    updateButton.id = "updateProfileBtn";
+    updateButton.textContent = "Update";
+
+    updateProfileSection.appendChild(updateTitle);
+    updateProfileSection.appendChild(avatarInput);
+    updateProfileSection.appendChild(bannerInput);
+    updateProfileSection.appendChild(bioTextarea);
+    updateProfileSection.appendChild(updateButton);
+
+    profileContainer.appendChild(updateProfileSection);
+
+    editButton.addEventListener("click", function () {
+        updateProfileSection.style.display = updateProfileSection.style.display === "none" ? "block" : "none";
     });
 }
 
-async function updateUserProfile(username, bio, avatar, banner) {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
+async function updateProfile() {
+    const username = "brukernavn"; 
+    const bio = "Ny bio-tekst";
+    const avatar = "https://example.com/avatar.jpg";
+    const banner = "https://example.com/banner.jpg";
 
-    const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
-        },
-        body: JSON.stringify({ bio, avatar: { url: avatar }, banner: { url: banner } })
-    });
-
-    if (!response.ok) {
-        console.error("Failed to update profile.");
-        return null;
-    }
+    const updatedProfile = await updateUserProfile(username, bio, avatar, banner);
     
-    return await response.json();
+    if (updatedProfile) {
+        console.log("Profil oppdatert:", updatedProfile);
+    } else {
+        console.log("Kunne ikke oppdatere profil.");
+    }
 }
+
+updateProfile();
 
 async function displayUserPosts(username) {
     const posts = await getUserPosts(username);
     const postsContainer = document.getElementById("postsContainer");
 
+    postsContainer.innerHTML = ''; 
+
     if (!posts || posts.length === 0) {
-        postsContainer.innerHTML = "<p>No posts yet.</p>";
+        const noPostsMessage = document.createElement("p");
+        noPostsMessage.textContent = "No posts yet.";
+        postsContainer.appendChild(noPostsMessage);
         return;
     }
 
-    postsContainer.innerHTML = posts.map(post => `
-        <div class="post" id="post-${post.id}">
-            <div class="post-actions">
-                <button onclick="openEditModal('${post.id}')"><i class="fas fa-edit"></i></button>
-                <button onclick="deleteUserPost('${post.id}')"><i class="fas fa-trash"></i></button>
-            </div>
-            <h3 class="post-title">${post.title}</h3>
-            <p class="post-body">${post.body}</p>
-            ${post.media?.url ? `<img class="post-image" src="${post.media.url}" alt="Post image">` : ""}
-            <p class="post-author">By: ${post.author?.name || "Unknown"}</p>
-        </div>
-    `).join('');
-}
+    posts.forEach(post => {
+        const postElement = document.createElement("div");
+        postElement.className = "post";
+        postElement.id = `post-${post.id}`;
 
-async function getUserProfile(username) {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
+ 
+        const postActions = document.createElement("div");
+        postActions.className = "post-actions";
 
-    const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
+        const editButton = document.createElement("button");
+        const editIcon = document.createElement("i");
+        editIcon.className = "fas fa-edit"; 
+        editButton.appendChild(editIcon);  
+        editButton.addEventListener("click", () => openEditModal(post.id));
+        
+        const deleteButton = document.createElement("button");
+        const deleteIcon = document.createElement("i");
+        deleteIcon.className = "fas fa-trash"; 
+        deleteButton.appendChild(deleteIcon); 
+        deleteButton.addEventListener("click", () => deleteUserPost(post.id));
+
+        postActions.appendChild(editButton);
+        postActions.appendChild(deleteButton);
+
+        const titleElement = document.createElement("h3");
+        titleElement.className = "post-title";
+        titleElement.textContent = post.title;
+
+        const bodyElement = document.createElement("p");
+        bodyElement.className = "post-body";
+        bodyElement.textContent = post.body;
+
+
+        if (post.media?.url) {
+            const imageElement = document.createElement("img");
+            imageElement.className = "post-image";
+            imageElement.src = post.media.url;
+            imageElement.alt = "Post image";
+            postElement.appendChild(imageElement);
         }
-    });
 
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data.data;
+        const authorElement = document.createElement("p");
+        authorElement.className = "post-author";
+        authorElement.textContent = `Forfatter ${post.author?.name || "unknown"}`;
+
+        postElement.appendChild(titleElement);
+        postElement.appendChild(postActions);
+        postElement.appendChild(authorElement);
+        postElement.appendChild(bodyElement);
+
+        postsContainer.appendChild(postElement);
+    });
 }
+
+
+
+
+async function loadUserProfile() {
+    const username = "brukernavn";
+    const userProfile = await getUserProfile(username);
+    
+    if (userProfile) {
+        console.log("Brukerprofil:", userProfile);
+    } else {
+        console.log("Kunne ikke hente brukerprofil.");
+    }
+}
+
+loadUserProfile();
 
 async function getUserPosts(username) {
     const token = localStorage.getItem("token");
@@ -275,7 +367,7 @@ function openEditModal(postId) {
         return;
     }
 
-    document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
+document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
 document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
 document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
 
