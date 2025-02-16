@@ -192,3 +192,27 @@ export async function fetchComments(postId, accessToken) {
   }
 }
 
+export async function login(userData) {
+  try {
+    const response = await fetch('https://v2.api.noroff.dev/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Noroff-API-Key': X_NOROFF_API_KEY,
+      },
+      body: JSON.stringify(userData), // userData contains email and password
+    });
+
+    const result = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(result.errors ? result.errors[0].message : 'Login failed');
+    }
+
+    return result.data; // Returning the response data (which contains the token and user info)
+  } catch (error) {
+    console.error('Login API Error:', error.message);
+    throw error; // Propagate the error to the caller
+  }
+}
+
