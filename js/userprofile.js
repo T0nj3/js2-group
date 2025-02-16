@@ -1,7 +1,4 @@
-const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
-const API_BASE_URL = "https://v2.api.noroff.dev/social";
-
-import { updateUserProfile, getUserProfile, } from './api.js';
+import { updateUserProfile, getUserProfile, getUserPosts, createPost, deleteUserPost, saveEditedPost } from './api.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
     const username = localStorage.getItem("name");
@@ -41,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 });
 
 async function displayUserProfile(username) {
-    const profile = await getUserProfile(username);
+    const profile = await getUserProfile(username);  
     const profileContainer = document.getElementById("profileContainer");
 
     if (!profile) {
@@ -51,31 +48,25 @@ async function displayUserProfile(username) {
 
     profileContainer.innerHTML = '';
 
-
     const profileDetails = document.createElement("div");
     profileDetails.className = "profile-details";
-
 
     const banner = document.createElement("img");
     banner.src = profile.banner?.url || 'https://via.placeholder.com/600x200';
     banner.className = "profile-banner";
 
-
     const profileHeader = document.createElement("div");
     profileHeader.className = "profile-header";
-
 
     const avatar = document.createElement("img");
     avatar.src = profile.avatar?.url || 'https://via.placeholder.com/150';
     avatar.className = "profile-avatar";
-
 
     const profileInfo = document.createElement("div");
     profileInfo.className = "profile-info";
 
     const nameElement = document.createElement("h2");
     nameElement.textContent = profile.name;
-
 
     const editButton = document.createElement("button");
     editButton.id = "editProfileBtn";
@@ -90,7 +81,6 @@ async function displayUserProfile(username) {
     const bioElement = document.createElement("p");
     bioElement.textContent = profile.bio || "No bio available";
 
-    // Bygger sammen elementene
     profileInfo.appendChild(nameElement);
     profileInfo.appendChild(bioElement);
     profileHeader.appendChild(avatar);
@@ -98,7 +88,6 @@ async function displayUserProfile(username) {
     profileDetails.appendChild(banner);
     profileDetails.appendChild(profileHeader);
     profileContainer.appendChild(profileDetails);
-
 
     const updateProfileSection = document.createElement("div");
     updateProfileSection.id = "updateProfileSection";
@@ -139,25 +128,8 @@ async function displayUserProfile(username) {
     });
 }
 
-async function updateProfile() {
-    const username = "brukernavn"; 
-    const bio = "Ny bio-tekst";
-    const avatar = "https://example.com/avatar.jpg";
-    const banner = "https://example.com/banner.jpg";
-
-    const updatedProfile = await updateUserProfile(username, bio, avatar, banner);
-    
-    if (updatedProfile) {
-        console.log("Profil oppdatert:", updatedProfile);
-    } else {
-        console.log("Kunne ikke oppdatere profil.");
-    }
-}
-
-updateProfile();
-
 async function displayUserPosts(username) {
-    const posts = await getUserPosts(username);
+    const posts = await getUserPosts(username);  
     const postsContainer = document.getElementById("postsContainer");
 
     postsContainer.innerHTML = ''; 
@@ -174,7 +146,6 @@ async function displayUserPosts(username) {
         postElement.className = "post";
         postElement.id = `post-${post.id}`;
 
- 
         const postActions = document.createElement("div");
         postActions.className = "post-actions";
 
@@ -201,7 +172,6 @@ async function displayUserPosts(username) {
         bodyElement.className = "post-body";
         bodyElement.textContent = post.body;
 
-
         if (post.media?.url) {
             const imageElement = document.createElement("img");
             imageElement.className = "post-image";
@@ -223,157 +193,18 @@ async function displayUserPosts(username) {
     });
 }
 
-
-
-
-async function loadUserProfile() {
-    const username = "brukernavn";
-    const userProfile = await getUserProfile(username);
-    
-    if (userProfile) {
-        console.log("Brukerprofil:", userProfile);
-    } else {
-        console.log("Kunne ikke hente brukerprofil.");
-    }
-}
-
-loadUserProfile();
-
-async function getUserPosts(username) {
-    const token = localStorage.getItem("token");
-    if (!token) return [];
-
-    const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
-        }
-    });
-
-    if (!response.ok) return [];
-    const data = await response.json();
-    return data.data || [];
-}
-
-async function createPost(title, body, imageUrl) {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
-
-    const postData = {
-        title,
-        body,
-        media: imageUrl ? { url: imageUrl, alt: "Post image" } : null
-    };
-
-    const response = await fetch(`${API_BASE_URL}/posts`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
-        },
-        body: JSON.stringify(postData)
-    });
-
-    if (!response.ok) return null;
-    return await response.json();
-}
-
-async function deleteUserPost(postId) {
-    const confirmation = confirm("Are you sure you want to delete this post?");
-    if (!confirmation) return; 
-
-    const token = localStorage.getItem("token");
-    if (!token) return null;
-
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-        method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "X-Noroff-API-Key": X_NOROFF_API_KEY
-        }
-    });
-
-    if (!response.ok) {
-        alert("Failed to delete post. Please try again.");
-        return null;
-    }
- 
-    window.location.reload(); 
-}
-
-async function saveEditedPost() {
-   
-
-    const postId = document.getElementById("editPostModal").dataset.postId;
-    if (!postId) {
-        console.error("Post ID not found!");
-        return;
-    }
-
-    const newTitle = document.getElementById("editPostTitle").value.trim();
-    const newBody = document.getElementById("editPostBody").value.trim();
-    const newImageUrl = document.getElementById("editPostImage").value.trim();
-
-    if (!newTitle || !newBody) {
-        console.error("Title and body cannot be empty!");
-        return;
-    }
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-        console.error("User not authenticated!");
-        return;
-    }
-
-   
-    const updatedPost = {
-        title: newTitle,
-        body: newBody,
-        media: newImageUrl ? { url: newImageUrl } : null
-    };
-
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-                "X-Noroff-API-Key": X_NOROFF_API_KEY
-            },
-            body: JSON.stringify(updatedPost)
-        });
-
-        const responseData = await response.json();
-
-        if (!response.ok) {
-            console.error("Failed to update post:", responseData);
-            return;
-        }
-
-        await displayUserPosts(localStorage.getItem("name"));
-        closeModal("editPostModal");
-
-    } catch (error) {
-        console.error("Error updating post:", error);
-    }
-}
-
 function openEditModal(postId) {
-
     const postElement = document.getElementById(`post-${postId}`);
     if (!postElement) {
         return;
     }
 
-document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
-document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
-document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
+    document.getElementById("editPostTitle").value = postElement.querySelector(".post-title")?.innerText || "";
+    document.getElementById("editPostBody").value = postElement.querySelector(".post-body")?.innerText || "";
+    document.getElementById("editPostImage").value = postElement.querySelector(".post-image")?.src || "";
 
     const modal = document.getElementById("editPostModal");
     modal.dataset.postId = postId;
-   
     modal.style.display = "flex";
 }
 

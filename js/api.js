@@ -1,4 +1,5 @@
 export const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
+export const API_BASE_URL = 'https://v2.api.noroff.dev/social';
 
 
 export async function getAllPosts() {
@@ -200,7 +201,7 @@ export async function login(userData) {
         'Content-Type': 'application/json',
         'X-Noroff-API-Key': X_NOROFF_API_KEY,
       },
-      body: JSON.stringify(userData), // userData contains email and password
+      body: JSON.stringify(userData), 
     });
 
     const result = await response.json();
@@ -256,3 +257,91 @@ export async function updateUserProfile(username, bio, avatar, banner) {
   return await response.json();
 }
 
+
+export async function getUserPosts(username) {
+    const token = localStorage.getItem("token");
+    if (!token) return [];
+
+    const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "X-Noroff-API-Key": X_NOROFF_API_KEY
+        }
+    });
+
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.data || [];
+}
+
+export async function createPost(title, body, imageUrl) {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    const postData = {
+        title,
+        body,
+        media: imageUrl ? { url: imageUrl, alt: "Post image" } : null
+    };
+
+    const response = await fetch(`${API_BASE_URL}/posts`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            "X-Noroff-API-Key": X_NOROFF_API_KEY
+        },
+        body: JSON.stringify(postData)
+    });
+
+    if (!response.ok) return null;
+    return await response.json();
+}
+
+export async function deleteUserPost(postId) {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "X-Noroff-API-Key": X_NOROFF_API_KEY
+        }
+    });
+
+    if (!response.ok) {
+        alert("Failed to delete post. Please try again.");
+        return null;
+    }
+ 
+    window.location.reload();
+}
+
+export async function saveEditedPost(postId, newTitle, newBody, newImageUrl) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const updatedPost = {
+        title: newTitle,
+        body: newBody,
+        media: newImageUrl ? { url: newImageUrl } : null
+    };
+
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+            "X-Noroff-API-Key": X_NOROFF_API_KEY
+        },
+        body: JSON.stringify(updatedPost)
+    });
+
+    if (!response.ok) {
+        console.error("Failed to update post.");
+        return;
+    }
+
+    return await response.json();
+}
