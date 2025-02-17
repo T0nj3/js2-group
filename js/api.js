@@ -1,7 +1,7 @@
 export const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
 export const API_BASE_URL = 'https://v2.api.noroff.dev/social';
-const token = localStorage.getItem("token");
 
+const token = localStorage.getItem("token");
 
 export async function getAllPosts() {
   const accessToken = localStorage.getItem('token');
@@ -19,7 +19,7 @@ export async function getAllPosts() {
   };
 
   try {
-    const response = await fetch('https://v2.api.noroff.dev/social/posts', customOptions);
+    const response = await fetch(`${API_BASE_URL}/posts`, customOptions);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch posts`);
@@ -38,7 +38,6 @@ export async function getAllPosts() {
     throw error;
   }
 }
-
 
 export async function getUserProfile(username) {
   const API_BASE_URL = "https://v2.api.noroff.dev/social/profiles";
@@ -74,7 +73,7 @@ export async function getUserProfile(username) {
 
 export async function fetchPostById(postId, accessToken) {
   try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}`, {
+      const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
           method: "GET",
           headers: {
               "Content-Type": "application/json",
@@ -98,37 +97,12 @@ export async function fetchPostById(postId, accessToken) {
 
 export async function sendComment(postId, commentText, accessToken) {
   try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/comment`, {
+      const response = await fetch(`${API_BASE_URL}/posts/${postId}/comment`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${accessToken}`,
-              "X-Noroff-API-Key": '580b33a9-04f3-4da3-bb38-de9adcf9d9f8'
-          },
-          body: JSON.stringify({ body: commentText })
-      });
-
-      if (!response.ok) {
-          const errorResponse = await response.json();
-          console.error("API-feil:", errorResponse);
-          throw new Error("Kunne ikke sende kommentar");
-      }
-
-      return await response.json();
-  } catch (error) {
-      console.error("Feil ved API-kall:", error.message);
-      throw error; 
-  }
-}
-
-export async function getComment( commentText,) {
-  try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${poatId}_comments=true`, {
-          method: "GET",
-          headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${accessToken}`,
-              "X-Noroff-API-Key": '580b33a9-04f3-4da3-bb38-de9adcf9d9f8'
+              "X-Noroff-API-Key": X_NOROFF_API_KEY
           },
           body: JSON.stringify({ body: commentText })
       });
@@ -148,12 +122,12 @@ export async function getComment( commentText,) {
 
 export async function sendReactToPost(postId, symbol, accessToken) {
   try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}/react/${symbol}`, {
+      const response = await fetch(`${API_BASE_URL}/posts/${postId}/react/${symbol}`, {
           method: "PUT",  
           headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${accessToken}`,
-              "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8"
+              "X-Noroff-API-Key": X_NOROFF_API_KEY
           },
           body: JSON.stringify({ symbol: symbol }) 
       });
@@ -170,14 +144,13 @@ export async function sendReactToPost(postId, symbol, accessToken) {
       throw error; 
   }
 }
-
 export async function fetchComments(postId, accessToken) {
   try {
-      const response = await fetch(`https://v2.api.noroff.dev/social/posts/${postId}?_comments=true`, {
+      const response = await fetch(`${API_BASE_URL}/posts/${postId}?_comments=true`, {
           method: "GET",
           headers: {
               "Authorization": `Bearer ${accessToken}`,
-              "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8",
+              "X-Noroff-API-Key": X_NOROFF_API_KEY,
               "Content-Type": "application/json"
           }
       });
@@ -194,7 +167,7 @@ export async function fetchComments(postId, accessToken) {
 
 export async function login(userData) {
   try {
-    const response = await fetch('https://v2.api.noroff.dev/auth/login', {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -218,11 +191,11 @@ export async function login(userData) {
 
 export async function registerUser(userData) {
   try {
-      const response = await fetch("https://v2.api.noroff.dev/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
-              "X-Noroff-API-Key": "580b33a9-04f3-4da3-bb38-de9adcf9d9f8"
+              "X-Noroff-API-Key": X_NOROFF_API_KEY
           },          
           body: JSON.stringify(userData)
       });
@@ -233,8 +206,8 @@ export async function registerUser(userData) {
       throw error;
   }
 }
+
 export async function updateUserProfile(username, bio, avatar, banner) {
-  const API_BASE_URL = "https://v2.api.noroff.dev/social"; 
   if (!token) return null;
 
   const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
@@ -254,7 +227,6 @@ export async function updateUserProfile(username, bio, avatar, banner) {
   
   return await response.json();
 }
-
 
 export async function getUserPosts(username) {
     if (!token) return [];
@@ -314,8 +286,7 @@ export async function deleteUserPost(postId) {
 }
 
 export async function saveEditedPost(postId, newTitle, newBody, newImageUrl) {
-  const token = localStorage.getItem("token");
-    if (!token) return;
+  if (!token) return;
 
     const updatedPost = {
         title: newTitle,
@@ -340,7 +311,6 @@ export async function saveEditedPost(postId, newTitle, newBody, newImageUrl) {
 
     return await response.json();
 }
-
 
 export async function fetchProfile(username) {
     try {
