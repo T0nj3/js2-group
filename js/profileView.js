@@ -1,5 +1,5 @@
-const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
-const API_BASE_URL = "https://v2.api.noroff.dev/social";
+import { fetchProfile, fetchUserPosts } from './api.js';
+
 const token = localStorage.getItem("token");
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -16,24 +16,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
     }
 
-    await fetchProfile(profileUsername);
-    await fetchUserPosts(profileUsername);  
+    await fetchProfileData(profileUsername);
+    await fetchUserPostsData(profileUsername);  
 });
 
-async function fetchProfile(username) {
+async function fetchProfileData(username) {
     try {
-        const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "X-Noroff-API-Key": X_NOROFF_API_KEY,
-            },
-        });
-
-        if (!response.ok) throw new Error("Could not fetch profile.");
-
-        const data = await response.json();
+        const data = await fetchProfile(username);
         console.log("Profile fetched:", data);
-
         displayProfile(data);  
     } catch (error) {
         console.error("Error fetching profile:", error.message);
@@ -70,22 +60,10 @@ function displayProfile(data) {
     profileContainer.appendChild(avatarElement);
 }
 
-/* ✅ Henter alle innleggene til brukeren */
-async function fetchUserPosts(username) {
+async function fetchUserPostsData(username) {
     try {
-        const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "X-Noroff-API-Key": X_NOROFF_API_KEY,
-                "Content-Type": "application/json"
-            }
-        });
-
-        if (!response.ok) throw new Error("Could not fetch user posts.");
-
-        const data = await response.json();
+        const data = await fetchUserPosts(username);
         console.log("User posts fetched:", data);
-
         displayUserPosts(data);
     } catch (error) {
         console.error("Error fetching user posts:", error.message);
