@@ -92,7 +92,6 @@ async function fetchUserPosts(username) {
     }
 }
 
-/* ✅ Viser innleggene på profilsiden */
 function displayUserPosts(data) {
     const postsContainer = document.getElementById("postsContainer");
     if (!postsContainer) {
