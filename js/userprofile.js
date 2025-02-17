@@ -228,8 +228,23 @@ function setupModal() {
     }
 }
 
-document.getElementById("saveEditPostBtn").addEventListener("click", saveEditedPost);
+document.getElementById("saveEditPostBtn").addEventListener("click", function() {
+    const postId = document.getElementById("editPostModal").dataset.postId; // Hent postId
+    const newTitle = document.getElementById("editPostTitle").value.trim();
+    const newBody = document.getElementById("editPostBody").value.trim();
+    const newImageUrl = document.getElementById("editPostImage").value.trim();
 
+    if (postId && newTitle && newBody) {
+        saveEditedPost(postId, newTitle, newBody, newImageUrl)
+            .then(response => {
+                console.log("Post oppdatert:", response);
+                closeModal("editPostModal"); 
+                displayUserPosts(localStorage.getItem("name")); 
+            })
+        } else {
+            console.error("ikke riktig data, sørg for at du sender riktig data til api.");
+        }
+});
 window.openEditModal = openEditModal;
 window.deleteUserPost = deleteUserPost;
 window.closeModal = closeModal;

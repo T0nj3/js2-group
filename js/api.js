@@ -314,6 +314,7 @@ export async function deleteUserPost(postId) {
 }
 
 export async function saveEditedPost(postId, newTitle, newBody, newImageUrl) {
+  const token = localStorage.getItem("token");
     if (!token) return;
 
     const updatedPost = {
@@ -355,7 +356,7 @@ export async function fetchProfile(username) {
         return await response.json();
     } catch (error) {
         console.error("Error fetching profile:", error.message);
-        throw error; // Reraising the error so it can be caught in the calling function
+        throw error; 
     }
 }
 
@@ -374,7 +375,7 @@ export async function fetchUserPosts(username) {
         return await response.json();
     } catch (error) {
         console.error("Error fetching user posts:", error.message);
-        throw error; // Reraising the error for handling in the calling function
+        throw error; 
     }
 }
 
@@ -391,7 +392,7 @@ export async function fetchProfiles() {
       return await response.json();
   } catch (error) {
       console.error(error.message);
-      throw error; // Reraising the error so it can be handled in the calling function
+      throw error; 
   }
 }
 
@@ -427,6 +428,6 @@ export async function toggleFollow(profileName) {
       return { isFollowing, response };
   } catch (error) {
       console.error("Error:", error.message);
-      throw error; // Reraising the error so it can be handled in the calling function
+      throw error; 
   }
 }
