@@ -1,5 +1,6 @@
 export const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
 export const API_BASE_URL = 'https://v2.api.noroff.dev/social';
+const token = localStorage.getItem("token");
 
 
 export async function getAllPosts() {
@@ -39,10 +40,8 @@ export async function getAllPosts() {
 }
 
 
-
 export async function getUserProfile(username) {
   const API_BASE_URL = "https://v2.api.noroff.dev/social/profiles";
-  const token = localStorage.getItem("token");
 
   if (!token) {
       console.error("Ingen tilgang, brukeren er ikke logget inn.");
@@ -236,7 +235,6 @@ export async function registerUser(userData) {
 }
 export async function updateUserProfile(username, bio, avatar, banner) {
   const API_BASE_URL = "https://v2.api.noroff.dev/social"; 
-  const token = localStorage.getItem("token");
   if (!token) return null;
 
   const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
@@ -259,7 +257,6 @@ export async function updateUserProfile(username, bio, avatar, banner) {
 
 
 export async function getUserPosts(username) {
-    const token = localStorage.getItem("token");
     if (!token) return [];
 
     const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
@@ -275,7 +272,6 @@ export async function getUserPosts(username) {
 }
 
 export async function createPost(title, body, imageUrl) {
-    const token = localStorage.getItem("token");
     if (!token) return null;
 
     const postData = {
@@ -299,7 +295,6 @@ export async function createPost(title, body, imageUrl) {
 }
 
 export async function deleteUserPost(postId) {
-    const token = localStorage.getItem("token");
     if (!token) return null;
 
     const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
@@ -319,7 +314,6 @@ export async function deleteUserPost(postId) {
 }
 
 export async function saveEditedPost(postId, newTitle, newBody, newImageUrl) {
-    const token = localStorage.getItem("token");
     if (!token) return;
 
     const updatedPost = {
@@ -344,4 +338,42 @@ export async function saveEditedPost(postId, newTitle, newBody, newImageUrl) {
     }
 
     return await response.json();
+}
+
+
+export async function fetchProfile(username) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/profiles/${username}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "X-Noroff-API-Key": X_NOROFF_API_KEY,
+            },
+        });
+
+        if (!response.ok) throw new Error("Could not fetch profile.");
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching profile:", error.message);
+        throw error; // Reraising the error so it can be caught in the calling function
+    }
+}
+
+export async function fetchUserPosts(username) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/profiles/${username}/posts`, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "X-Noroff-API-Key": X_NOROFF_API_KEY,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) throw new Error("Could not fetch user posts.");
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching user posts:", error.message);
+        throw error; // Reraising the error for handling in the calling function
+    }
 }
