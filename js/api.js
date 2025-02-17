@@ -1,5 +1,6 @@
 export const X_NOROFF_API_KEY = '580b33a9-04f3-4da3-bb38-de9adcf9d9f8';
 export const API_BASE_URL = 'https://v2.api.noroff.dev/social';
+export const API_AUTH_URL = 'https://v2.api.noroff.dev';
 
 const token = localStorage.getItem("token");
 
@@ -167,7 +168,7 @@ export async function fetchComments(postId, accessToken) {
 
 export async function login(userData) {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_AUTH_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -191,7 +192,7 @@ export async function login(userData) {
 
 export async function registerUser(userData) {
   try {
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const response = await fetch(`${API_AUTH_URL}/auth/register`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json",
