@@ -377,3 +377,56 @@ export async function fetchUserPosts(username) {
         throw error; // Reraising the error for handling in the calling function
     }
 }
+
+export async function fetchProfiles() {
+  try {
+      const response = await fetch(`${API_BASE_URL}/profiles?sort=updated&sortOrder=desc&limit=100`, {
+          headers: { 
+              "Authorization": `Bearer ${token}`, 
+              "X-Noroff-API-Key": X_NOROFF_API_KEY 
+          }
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch profiles.");
+      return await response.json();
+  } catch (error) {
+      console.error(error.message);
+      throw error; // Reraising the error so it can be handled in the calling function
+  }
+}
+
+export async function toggleFollow(profileName) {
+  const followingList = JSON.parse(localStorage.getItem("followingList")) || [];
+  const isFollowing = followingList.includes(profileName);
+  let url;
+
+  try {
+      if (isFollowing) {
+          console.log(`Attempting to unfollow ${profileName}`);
+          url = `${API_BASE_URL}/profiles/${profileName}/unfollow`;
+      } else {
+          console.log(`Attempting to follow ${profileName}`);
+          url = `${API_BASE_URL}/profiles/${profileName}/follow`;
+      }
+
+      const response = await fetch(url, {
+          method: "PUT",
+          headers: { 
+              "Authorization": `Bearer ${token}`,
+              "X-Noroff-API-Key": X_NOROFF_API_KEY,
+              "Content-Type": "application/json"
+          }
+      });
+
+      if (!response.ok) throw new Error(isFollowing ? "Failed to unfollow user." : "Failed to follow user.");
+      
+      const responseData = await response.json();
+      console.log("Response Status:", response.status);
+      console.log("Response Data:", responseData);
+
+      return { isFollowing, response };
+  } catch (error) {
+      console.error("Error:", error.message);
+      throw error; // Reraising the error so it can be handled in the calling function
+  }
+}
