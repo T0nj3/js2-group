@@ -31,10 +31,9 @@
         </div>
     </header>
     
- 
     <main>
-        <div id="profileContainer" class="profile-container"></div>
-
+        <div id="profileContainer" class="profile-container">
+    
         <div class="follow-buttons">
             <button id="showFollowersBtn">
                 Followers (<span id="followersCount">0</span>)
@@ -43,11 +42,28 @@
                 Following (<span id="followingCount">0</span>)
             </button>
         </div>
-
+    </div>
+    
         <button class="add-post-btn" id="openPostForm">
             <i class="fas fa-plus"></i>
         </button>
-
+       
+        <div class="toggle-menu">
+            <button class="toggle-button active" data-target="yourPosts">Your Posts</button>
+            <button class="toggle-button" data-target="exploreProfiles">Explore Profiles</button>
+        </div>
+       
+        <div id="yourPosts" class="content-section active">
+            <h2>Your Posts</h2>
+            <div id="postsContainer" class="posts-container"></div>
+        </div>
+    
+        <div id="exploreProfiles" class="content-section">
+            <h2>Explore Profiles</h2>
+            <input type="text" id="searchProfiles" placeholder="Search profiles...">
+            <div id="profilesContainer"></div>
+        </div>
+    
         <div id="newPostModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('newPostModal')">&times;</span>
@@ -58,7 +74,7 @@
                 <button id="createPostBtn">Post</button>
             </div>
         </div>
-
+    
         <div id="editPostModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('editPostModal')">&times;</span>
@@ -69,16 +85,7 @@
                 <button id="saveEditPostBtn">Save Changes</button>
             </div>
         </div>
-
-        <div id="postsContainer" class="posts-container"></div>
-
-        <section class="explore-profiles">
-            <h2>Explore Profiles</h2>
-            <input type="text" id="searchProfiles" placeholder="Search profiles...">
-            <div id="profilesContainer"></div>
-        </section>
-
-
+    
         <div id="followersModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('followersModal')">&times;</span>
@@ -86,7 +93,7 @@
                 <ul id="followersList"></ul>
             </div>
         </div>
-
+    
         <div id="followingModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="closeModal('followingModal')">&times;</span>
@@ -94,7 +101,7 @@
                 <ul id="followingList"></ul>
             </div>
         </div>
-
+        
     </main>
 
 </body>
