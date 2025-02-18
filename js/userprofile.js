@@ -237,7 +237,6 @@ document.getElementById("saveEditPostBtn").addEventListener("click", function() 
     if (postId && newTitle && newBody) {
         saveEditedPost(postId, newTitle, newBody, newImageUrl)
             .then(response => {
-                console.log("Post oppdatert:", response);
                 closeModal("editPostModal"); 
                 displayUserPosts(localStorage.getItem("name")); 
             })

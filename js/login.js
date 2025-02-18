@@ -14,16 +14,11 @@ document.getElementById("loginForm").addEventListener("submit", async function (
 
         const result = await login(userData);
 
-        console.log("Full API Response:", result); 
 
         if (result) {
             const token = result.accessToken;
             const userEmail = result.email;
             const userName = result.name;
-
-            console.log("Token:", token);
-            console.log("Email:", userEmail);
-            console.log("Name:", userName);
 
             if (!token || !userEmail || !userName) {
                 throw new Error("Token, email or name is undefined!");

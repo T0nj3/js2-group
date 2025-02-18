@@ -75,12 +75,10 @@ async function handleFollowToggle(profileName, button) {
             const newFollowingList = followingList.filter(name => name !== profileName);
             localStorage.setItem("followingList", JSON.stringify(newFollowingList));
             button.textContent = "Follow";
-            console.log(`${username} has unfollowed ${profileName}`);
         } else {
             followingList.push(profileName);
             localStorage.setItem("followingList", JSON.stringify(followingList));
             button.textContent = "Followed";
-            console.log(`${username} has followed ${profileName}`);
         }
     } catch (error) {
         console.error("Error toggling follow status:", error.message);
