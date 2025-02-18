@@ -55,7 +55,6 @@ export async function getUserProfile(username) {
   };
 
   try {
-      console.log(`Henter profil for: ${username}`);
       const response = await fetch(`${API_BASE_URL}/${username}`, { headers });
 
       if (!response.ok) {
@@ -64,7 +63,6 @@ export async function getUserProfile(username) {
       }
 
       const data = await response.json();
-      console.log("Brukerprofil:", data.data);
       return data.data;
   } catch (error) {
       console.error("Feil ved henting av brukerprofil:", error);
@@ -374,10 +372,9 @@ export async function toggleFollow(profileName) {
 
   try {
       if (isFollowing) {
-          console.log(`Attempting to unfollow ${profileName}`);
+          
           url = `${API_BASE_URL}/profiles/${profileName}/unfollow`;
       } else {
-          console.log(`Attempting to follow ${profileName}`);
           url = `${API_BASE_URL}/profiles/${profileName}/follow`;
       }
 
@@ -393,8 +390,6 @@ export async function toggleFollow(profileName) {
       if (!response.ok) throw new Error(isFollowing ? "Failed to unfollow user." : "Failed to follow user.");
       
       const responseData = await response.json();
-      console.log("Response Status:", response.status);
-      console.log("Response Data:", responseData);
 
       return { isFollowing, response };
   } catch (error) {

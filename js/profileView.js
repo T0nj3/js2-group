@@ -23,7 +23,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function fetchProfileData(username) {
     try {
         const data = await fetchProfile(username);
-        console.log("Profile fetched:", data);
         displayProfile(data);  
     } catch (error) {
         console.error("Error fetching profile:", error.message);
@@ -63,7 +62,6 @@ function displayProfile(data) {
 async function fetchUserPostsData(username) {
     try {
         const data = await fetchUserPosts(username);
-        console.log("User posts fetched:", data);
         displayUserPosts(data);
     } catch (error) {
         console.error("Error fetching user posts:", error.message);
