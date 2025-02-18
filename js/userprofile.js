@@ -182,7 +182,7 @@ async function displayUserPosts(username) {
 
         const authorElement = document.createElement("p");
         authorElement.className = "post-author";
-        authorElement.textContent = `Forfatter ${post.author?.name || "unknown"}`;
+        authorElement.textContent = `Posted by: ${post.author?.name || "unknown"}`;
 
         postElement.appendChild(titleElement);
         postElement.appendChild(postActions);
@@ -205,11 +205,11 @@ function openEditModal(postId) {
 
     const modal = document.getElementById("editPostModal");
     modal.dataset.postId = postId;
-    modal.style.display = "flex";
+    modal.classList.add("active"); 
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
+    document.getElementById(modalId).classList.remove("active"); 
 }
 
 function setupModal() {
@@ -219,17 +219,17 @@ function setupModal() {
 
     if (openPostFormBtn && newPostModal && closeNewPostModalBtn) {
         openPostFormBtn.addEventListener("click", () => {
-            newPostModal.style.display = "flex";
+            newPostModal.classList.add("active");
         });
 
         closeNewPostModalBtn.addEventListener("click", () => {
-            newPostModal.style.display = "none";
+            newPostModal.classList.remove("active");
         });
     }
 }
 
 document.getElementById("saveEditPostBtn").addEventListener("click", function() {
-    const postId = document.getElementById("editPostModal").dataset.postId; // Hent postId
+    const postId = document.getElementById("editPostModal").dataset.postId;
     const newTitle = document.getElementById("editPostTitle").value.trim();
     const newBody = document.getElementById("editPostBody").value.trim();
     const newImageUrl = document.getElementById("editPostImage").value.trim();
@@ -237,13 +237,35 @@ document.getElementById("saveEditPostBtn").addEventListener("click", function() 
     if (postId && newTitle && newBody) {
         saveEditedPost(postId, newTitle, newBody, newImageUrl)
             .then(response => {
-                closeModal("editPostModal"); 
-                displayUserPosts(localStorage.getItem("name")); 
+                closeModal("editPostModal");
+                displayUserPosts(localStorage.getItem("name"));
             })
         } else {
-            console.error("ikke riktig data, sørg for at du sender riktig data til api.");
+            console.error("Post ID, title, or body is missing.");
         }
 });
+
 window.openEditModal = openEditModal;
 window.deleteUserPost = deleteUserPost;
 window.closeModal = closeModal;
+
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleButtons = document.querySelectorAll(".toggle-button");
+    const sections = document.querySelectorAll(".content-section");
+
+    if (toggleButtons.length > 0 && sections.length > 0) {
+        toggleButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                toggleButtons.forEach(btn => btn.classList.remove("active"));
+                sections.forEach(section => section.classList.remove("active"));
+
+                this.classList.add("active");
+                document.getElementById(this.dataset.target).classList.add("active");
+            });
+        });
+
+        document.querySelector(".toggle-button.active").click();
+    } else {
+        console.warn("Toggle buttons or sections not found in DOM.");
+    }
+});
