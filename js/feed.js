@@ -1,10 +1,13 @@
+/** 
+ * @function checkForToken 
+ * @description to check if the user has a token, if not then the user will be redirected to login.html  
+ */
 function checkForToken(){
     if (localStorage.getItem('token') === null) {
         window.location.href = 'login.html';
     }
-    else {
-    }
 }
+/** call the function for checkForToken */
 checkForToken();
 
 import { getAllPosts } from "./api.js";
