@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -18,7 +17,6 @@
     --glow-color: rgba(255, 255, 255, 0.4);
     --font-family: 'Poppins', sans-serif;
 }
-
 
 body {
     font-family: var(--font-family);
@@ -83,7 +81,6 @@ body {
     transform: scale(1.05);
 }
 
-
 #commentSection {
     width: 450px;
     margin: 30px auto;
@@ -95,27 +92,48 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-
 #commentContainer {
     margin-bottom: 15px;
     text-align: left;
 }
 
-#commentContainer p {
-    width: calc(100% - 20px);
-    margin: 10px auto;
+
+.comment {
     padding: 12px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     font-weight: bold;
     color: var(--accent-color);
+    transition: 0.3s;
+    margin-bottom: 10px;
     position: relative;
+}
+
+.comment:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+
+.replies {
+    margin-left: 20px;
+    padding-left: 15px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.replies p {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 10px;
+    border-radius: 6px;
+    margin: 5px 0;
+    font-weight: normal;
+    color: var(--accent-color);
     transition: 0.3s;
 }
 
-#commentContainer p:hover {
-    background: rgba(255, 255, 255, 0.3);
+.replies p:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
+
 
 .reply-btn {
     background: var(--primary-color);
@@ -145,7 +163,6 @@ body {
     margin-top: 10px;
 }
 
-
 .reply-input {
     width: 70%;
     padding: 10px;
@@ -162,7 +179,6 @@ body {
 .reply-input::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
-
 
 .reply-submit {
     background: var(--primary-color);
