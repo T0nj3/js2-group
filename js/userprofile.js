@@ -195,19 +195,19 @@ async function displayUserPosts(username) {
         authorElement.className = "post-author";
         authorElement.textContent = `Posted by: ${post.author?.name || "unknown"}`;
 
-       
-        postElement.addEventListener("click", () => {
-            window.location.href = `../post/individualpost.html?id=${post.id}`;
-        });
-
         postElement.appendChild(titleElement);
         postElement.appendChild(postActions);
         postElement.appendChild(authorElement);
         postElement.appendChild(bodyElement);
 
+        postElement.addEventListener("click", () => {
+            window.location.href = `../post/individualpost.html?id=${post.id}`;
+        });
+
         postsContainer.appendChild(postElement);
     });
 }
+
 
 function openEditModal(postId) {
     const postElement = document.getElementById(`post-${postId}`);
@@ -279,14 +279,6 @@ function test() {
                 document.getElementById(this.dataset.target).classList.add("active");
             });
         });
-
-=======
-<<<<<<< HEAD
-        document.querySelector(".toggle-button.active").click();
-=======
-        document.querySelector(".toggle-button.active")?.click();
->>>>>>> refs/remotes/origin/main
->>>>>>> Stashed changes
     } else {
         console.warn("Toggle buttons or sections not found.");
     }
