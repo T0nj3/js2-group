@@ -130,7 +130,6 @@ function setupCommentButton() {
 
         try {
             await sendComment(postId, commentText, localStorage.getItem("token"));
-            alert("Kommentar sendt!");
             commentInput.value = "";
             await loadComments(postId);
         } catch (error) {
@@ -152,7 +151,6 @@ function setupLikeButton() {
             await sendReactToPost(postId, "👍", localStorage.getItem("token"));
             localStorage.setItem(`likeButton_${postId}`, "true");
             likeBtn.textContent = "Liked";
-            alert("Your post has been liked!");
         } catch (error) {
             console.error("Error sending like:", error);
         }
