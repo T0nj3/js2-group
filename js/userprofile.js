@@ -280,7 +280,13 @@ function test() {
             });
         });
 
+=======
+<<<<<<< HEAD
+        document.querySelector(".toggle-button.active").click();
+=======
         document.querySelector(".toggle-button.active")?.click();
+>>>>>>> refs/remotes/origin/main
+>>>>>>> Stashed changes
     } else {
         console.warn("Toggle buttons or sections not found.");
     }
