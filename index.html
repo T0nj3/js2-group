@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
-    <title>Lynk Index Page</title>
+    <script type="module" src="../js/index.js"></script>    <title>Lynk Index Page</title>
 </head>
 <body>
     <div class="landing-container">
@@ -44,21 +44,5 @@
             </ul>
         </footer>
     </div>
-
-    <script>
-        setTimeout(() => {
-            const introScreen = document.querySelector('.intro-screen');
-            const contentSection = document.querySelector('.content-section');
-            const footer = document.querySelector('footer');
-    
-            introScreen.style.opacity = '0'; 
-            introScreen.style.transition = 'opacity 1s ease-in-out'; 
-            setTimeout(() => {
-                introScreen.style.display = 'none'; 
-                contentSection.classList.remove('hidden'); 
-                footer.classList.remove('hidden'); 
-            }, 1000); 
-        }, 3000); 
-    </script>
 </body>
 </html>
