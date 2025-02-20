@@ -195,11 +195,6 @@ async function displayUserPosts(username) {
         authorElement.className = "post-author";
         authorElement.textContent = `Posted by: ${post.author?.name || "unknown"}`;
 
-       
-        postElement.addEventListener("click", () => {
-            window.location.href = `../post/individualpost.html?id=${post.id}`;
-        });
-
         postElement.appendChild(titleElement);
         postElement.appendChild(postActions);
         postElement.appendChild(authorElement);
@@ -280,6 +275,8 @@ function test() {
             });
         });
 
+<<<<<<< Updated upstream
+        document.querySelector(".toggle-button.active")?.click();
 =======
 <<<<<<< HEAD
         document.querySelector(".toggle-button.active").click();
