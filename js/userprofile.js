@@ -184,6 +184,11 @@ async function displayUserPosts(username) {
         authorElement.className = "post-author";
         authorElement.textContent = `Posted by: ${post.author?.name || "unknown"}`;
 
+        postElement.addEventListener("click", () => {
+            window.location.href = `../post/individualpost.html?id=${post.id}`;
+        });
+
+
         postElement.appendChild(titleElement);
         postElement.appendChild(postActions);
         postElement.appendChild(authorElement);
@@ -264,6 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
+        
         document.querySelector(".toggle-button.active").click();
     } else {
         console.warn("Toggle buttons or sections not found in DOM.");
