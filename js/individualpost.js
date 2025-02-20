@@ -1,10 +1,8 @@
 import { fetchPostById, sendComment, sendReactToPost, fetchComments } from './api.js';
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await seeOnePost();
-    setupLikeButton();
-    setupCommentButton();
-});
+await seeOnePost();
+setupLikeButton();
+setupCommentButton();
 
 async function seeOnePost() {
     const postId = new URLSearchParams(window.location.search).get("id");
@@ -16,7 +14,7 @@ async function seeOnePost() {
     try {
         const post = await fetchPostById(postId, accessToken);
         const postContainer = document.getElementById("OnePost");
-        if (!postContainer) return console.error("Element with id 'OnePost' not found in the DOM");
+        if (!postContainer) return console.error("Element with id 'OnePost' not found");
 
         const titleElement = document.createElement("h2");
         titleElement.textContent = post.data.title;

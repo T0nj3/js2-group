@@ -3,7 +3,7 @@
  * attaches a event listener to the logout button, when the button is clicked, the user will be logged out and redirected to login.html
  * @event click 
 */
-document.addEventListener("DOMContentLoaded", function () {
+
     const logoutBtn = document.getElementById("logoutBtn");
 
     if (logoutBtn) {
@@ -16,4 +16,3 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "../account/login.html"; 
         });
     }
-});
