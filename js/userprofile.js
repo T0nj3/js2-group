@@ -1,11 +1,11 @@
 import { updateUserProfile, getUserProfile, getUserPosts, createPost, deleteUserPost, saveEditedPost } from './api.js';
 
-document.addEventListener("DOMContentLoaded", async function () {
+async function init() {
     const username = localStorage.getItem("name");
 
     if (!username) {
         console.error("No user found in localStorage.");
-        return;
+        return; 
     }
 
     await displayUserProfile(username);
@@ -35,7 +35,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     setupModal();
-});
+}
+init();
+
 
 async function displayUserProfile(username) {
     const profile = await getUserProfile(username);  
@@ -153,13 +155,22 @@ async function displayUserPosts(username) {
         const editIcon = document.createElement("i");
         editIcon.className = "fas fa-edit"; 
         editButton.appendChild(editIcon);  
-        editButton.addEventListener("click", () => openEditModal(post.id));
         
+        editButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            openEditModal(post.id);
+        });
+
         const deleteButton = document.createElement("button");
         const deleteIcon = document.createElement("i");
         deleteIcon.className = "fas fa-trash"; 
         deleteButton.appendChild(deleteIcon); 
-        deleteButton.addEventListener("click", () => deleteUserPost(post.id));
+        
+      
+        deleteButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            deleteUserPost(post.id);
+        });
 
         postActions.appendChild(editButton);
         postActions.appendChild(deleteButton);
@@ -184,10 +195,10 @@ async function displayUserPosts(username) {
         authorElement.className = "post-author";
         authorElement.textContent = `Posted by: ${post.author?.name || "unknown"}`;
 
+       
         postElement.addEventListener("click", () => {
             window.location.href = `../post/individualpost.html?id=${post.id}`;
         });
-
 
         postElement.appendChild(titleElement);
         postElement.appendChild(postActions);
@@ -254,7 +265,7 @@ window.openEditModal = openEditModal;
 window.deleteUserPost = deleteUserPost;
 window.closeModal = closeModal;
 
-document.addEventListener("DOMContentLoaded", function () {
+function test() {
     const toggleButtons = document.querySelectorAll(".toggle-button");
     const sections = document.querySelectorAll(".content-section");
 
@@ -269,9 +280,9 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
-        
-        document.querySelector(".toggle-button.active").click();
+        document.querySelector(".toggle-button.active")?.click();
     } else {
-        console.warn("Toggle buttons or sections not found in DOM.");
+        console.warn("Toggle buttons or sections not found.");
     }
-});
+}
+test();

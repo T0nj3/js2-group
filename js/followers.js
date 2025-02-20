@@ -3,15 +3,12 @@ import { fetchProfiles, toggleFollow } from './api.js';
 const token = localStorage.getItem("token");
 const username = localStorage.getItem("name");
 
-document.addEventListener("DOMContentLoaded", async () => {
-    if (!token || !username) {
-        console.error("No token or username found.");
-        return;
-    }
-
+if (!token || !username) {
+    console.error("No token or username found.");
+} else {
     await fetchProfilesData();
     setupSearch();
-});
+}
 
 async function fetchProfilesData() {
     try {

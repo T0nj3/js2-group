@@ -2,23 +2,20 @@ import { fetchProfile, fetchUserPosts } from './api.js';
 
 const token = localStorage.getItem("token");
 
-document.addEventListener("DOMContentLoaded", async function () {
-    if (!token) {
-        console.error("No token found.");
-        return;
-    }
+if (!token) {
+    console.error("No token found.");
+    window.location.href = "/login.html"; 
+}
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const profileUsername = urlParams.get('profile');  
+const urlParams = new URLSearchParams(window.location.search);
+const profileUsername = urlParams.get('profile');  
 
-    if (!profileUsername) {
-        console.error("No 'profile' parameter found in URL.");
-        return;
-    }
-
+if (!profileUsername) {
+    console.error("No 'profile' parameter found in URL.");
+} else {
     await fetchProfileData(profileUsername);
-    await fetchUserPostsData(profileUsername);  
-});
+    await fetchUserPostsData(profileUsername);
+}
 
 async function fetchProfileData(username) {
     try {
