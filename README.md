@@ -4,7 +4,7 @@
 
 ## Description
 In this project, we were tasked with setting up a functional social media  for a fictional company of our choice. we decided to create a social media called Lynk. This is a site aimed at teens and young adoults.
-this is a site for pepole to try new social medias.
+This is a site for people to try new social medias.
   
 ## Features  
 ✅ Register a new user  
@@ -21,6 +21,8 @@ this is a site for pepole to try new social medias.
 ✅ Comment on posts  
 ✅ Reply to comments  
 ✅ React to posts  
+Wanted to add a function were replying to comments was more "visible" 
+but it will only show as a main comment, as the endpoint does not support it.
 
 ## Pages  
 - **Login Page** (`login.html`)  
