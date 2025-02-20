@@ -1,6 +1,8 @@
 import { registerUser } from "./api.js";
 
-document.getElementById("registerForm").addEventListener("submit", async function (event) {
+document
+  .getElementById("registerForm")
+  .addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const name = document.getElementById("name").value;
@@ -11,18 +13,19 @@ document.getElementById("registerForm").addEventListener("submit", async functio
     const userData = { name, email, password };
 
     try {
-        const result = await registerUser(userData);
+      const result = await registerUser(userData);
 
-        if (result.errors) {
-            messageElement.textContent = "Error: " + result.errors[0].message;
-        } else {
-            messageElement.textContent = "Registration successful! Redirecting to login...";
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 2000);
-        }
+      if (result.errors) {
+        messageElement.textContent = "Error: " + result.errors[0].message;
+      } else {
+        messageElement.textContent =
+          "Registration successful! Redirecting to login...";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      }
     } catch (error) {
-        messageElement.textContent = "Something went wrong. Please try again.";
+      messageElement.textContent = "Something went wrong. Please try again.";
     }
-});
-
+  });
+  
