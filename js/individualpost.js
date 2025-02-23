@@ -5,6 +5,13 @@ import {
   fetchComments,
 } from "./api.js";
 
+function checkForToken() {
+  if (localStorage.getItem("token") === null) {
+    window.location.href = "../account/login.html";
+  }
+}
+checkForToken();
+
 await seeOnePost();
 setupLikeButton();
 setupCommentButton();

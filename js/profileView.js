@@ -4,7 +4,7 @@ const token = localStorage.getItem("token");
 
 if (!token) {
   console.error("No token found.");
-  window.location.href = "/login.html";
+  window.location.href = "../account/login.html";
 }
 
 const urlParams = new URLSearchParams(window.location.search);

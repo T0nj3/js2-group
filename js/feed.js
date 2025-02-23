@@ -4,7 +4,7 @@
  */
 function checkForToken() {
   if (localStorage.getItem("token") === null) {
-    window.location.href = "login.html";
+    window.location.href = "../account/login.html";
   }
 }
 /** call the function for checkForToken */
