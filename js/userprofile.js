@@ -7,6 +7,13 @@ import {
   saveEditedPost,
 } from "./api.js";
 
+function checkForToken() {
+  if (localStorage.getItem("token") === null) {
+    window.location.href = "../account/login.html";
+  }
+}
+checkForToken();
+
 async function init() {
   const username = localStorage.getItem("name");
 
